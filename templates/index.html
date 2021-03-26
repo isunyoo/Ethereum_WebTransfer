@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Ethereum Transfer Web</title>
+</head>
+
+<body>
+    <script type="text/javascript">
+        function checkInput() {
+            var inputx = document.forms["inputForm"]["inputValue"].value;
+            if (isNaN(inputx) || inputx == "") {
+                alert("Input value Must numbers");
+                return false;
+            }
+        }
+
+        function checkSearch() {
+            var searchx = document.forms["searchForm"]["searchValue"].value;
+            if (isNaN(searchx) || searchx == "") {
+                alert("Search value Must numbers");
+                return false;
+            }
+        }
+
+        function checkDelete() {
+            var deletex = document.forms["deleteForm"]["deleteValue"].value;
+            if (isNaN(deletex) || deletex == "") {
+                alert("Delete value Must numbers");
+                return false;
+            }
+        }
+    </script>
+    <h3>Welcome to Ether Transfer Web</h3>    
+    <h1>Account Name: {{ value0 }}</h1>    
+</body>
+
+</html>
