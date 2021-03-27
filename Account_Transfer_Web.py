@@ -88,7 +88,7 @@ def extractAccounts():
         with open(single_file, 'r') as keyfile:        
             _encrypted_key = keyfile.read()            
             # balance = web3.eth.getBalance(_global_wallet_addresses[idx])
-            _global_wallet_balances.insert(idx, _global_wallet_addresses[idx])
+            _global_wallet_balances.insert(idx, web3.eth.getBalance(_global_wallet_addresses[idx]))
             print("Private_Key :", binascii.b2a_hex(w3.eth.account.decrypt(_encrypted_key, ACCOUNT_KEY)).decode('ascii'))    
             # print("Ether Balance :", toEther(balance),"ETH =",toUSD(balance),"$USD\n")            
             print("Ether Balance :", toEther(_global_wallet_balances[idx]),"ETH =",toUSD(_global_wallet_balances[idx]),"$USD\n")     
@@ -198,6 +198,8 @@ app.config['SECRET_KEY'] = '12345'
 def index():    
     account_name = extractAccounts()
     print(account_name)
+    print(len(account_name))
+    print(account_name[1])
     # initial_hello = getHelloFromBlockchain()    
     # initial_length = getLengthFromBlockchain()
     # initial_contents = getContentsFromBlockchain()
