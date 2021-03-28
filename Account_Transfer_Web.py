@@ -16,6 +16,7 @@ API_URL = config('ETHSCAN_URL')
 _global_decrypted_key = ''
 _global_wallet_addresses = []
 _global_wallet_balances = []
+_global_addresses_cipher = []
 _global_principal_address = ''
 _global_wallet_address_counts = 0
 
@@ -78,10 +79,12 @@ def extractAccounts():
             # _global_wallet_addresses = web3.toChecksumAddress(json_file["address"])
             global _global_wallet_address_counts                   
             _global_wallet_addresses.insert(idx, web3.toChecksumAddress(json_file["address"]))
-            _cipher = json_file["crypto"]["ciphertext"]
+            # _cipher = json_file["crypto"]["ciphertext"]
+            _global_addresses_cipher.insert(idx, json_file["crypto"]["ciphertext"])
             # print(single_file)                        
             # print(f"[{idx+1}]Account_Address : {_global_wallet_addresses}")
-            print("Account_Cipher :", _cipher)
+            # print("Account_Cipher :", _cipher)
+            print("Account_Cipher :", _global_addresses_cipher[idx])
             _global_wallet_address_counts += 1
             sf.close()
                         
@@ -95,7 +98,7 @@ def extractAccounts():
             keyfile.close()
 
     # return _global_wallet_addresses, _cipher, binascii.b2a_hex(w3.eth.account.decrypt(_encrypted_key, ACCOUNT_KEY)).decode('ascii'), float(toEther(balance)), toUSD(balance)
-    return _global_wallet_addresses, _global_wallet_balances
+    return _global_wallet_addresses, _global_addresses_cipher, _global_wallet_balances
 
 
 # Function to select principle account
