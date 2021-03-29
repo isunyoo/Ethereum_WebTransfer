@@ -16,14 +16,14 @@ API_URL = config('ETHSCAN_URL')
 _global_decrypted_key = ''
 _global_wallet_addresses = []
 _global_wallet_balances = []
-<<<<<<< HEAD
-=======
 _global_wallet_balance_ether = []
 _global_wallet_balance_usd = []
->>>>>>> a06a16b2d45288b95e72774e5050486fd69b5fdc
 _global_addresses_cipher = []
 _global_principal_address = ''
 _global_wallet_address_counts = 0
+_recipient_wallet_addresses = []
+_recipient_wallet_balance_ether = []
+_recipient_wallet_balance_usd = []
 
 
 # Get the current price of cryptocurrency conversion API URL
@@ -88,19 +88,9 @@ def extractAccounts():
         with open(single_file, 'r') as sf:            
             json_file = json.load(sf)                 
             global _global_wallet_address_counts                   
-<<<<<<< HEAD
-            _global_wallet_addresses.insert(idx, web3.toChecksumAddress(json_file["address"]))
-            # _cipher = json_file["crypto"]["ciphertext"]
-            _global_addresses_cipher.insert(idx, json_file["crypto"]["ciphertext"])
-            # print(single_file)                        
-            # print(f"[{idx+1}]Account_Address : {_global_wallet_addresses}")
-            # print("Account_Cipher :", _cipher)
-            print("Account_Cipher :", _global_addresses_cipher[idx])
-=======
             _global_wallet_addresses.insert(idx, web3.toChecksumAddress(json_file["address"]))            
             _global_addresses_cipher.insert(idx, json_file["crypto"]["ciphertext"])            
             # print("Account_Cipher :", _global_addresses_cipher[idx])
->>>>>>> a06a16b2d45288b95e72774e5050486fd69b5fdc
             _global_wallet_address_counts += 1
             sf.close()
                         
@@ -112,14 +102,8 @@ def extractAccounts():
             # print("Private_Key :", binascii.b2a_hex(w3.eth.account.decrypt(_encrypted_key, ACCOUNT_KEY)).decode('ascii'))                     
             # print("Ether Balance :", toEther(_global_wallet_balances[idx]),"ETH =",toUSD(_global_wallet_balances[idx]),"$USD\n")     
             keyfile.close()
-<<<<<<< HEAD
-
-    # return _global_wallet_addresses, _cipher, binascii.b2a_hex(w3.eth.account.decrypt(_encrypted_key, ACCOUNT_KEY)).decode('ascii'), float(toEther(balance)), toUSD(balance)
-    return _global_wallet_addresses, _global_addresses_cipher, _global_wallet_balances
-=======
     
     return _global_wallet_addresses, _global_addresses_cipher, _global_wallet_balance_ether, _global_wallet_balance_usd
->>>>>>> a06a16b2d45288b95e72774e5050486fd69b5fdc
 
 
 # Function to select principle account
@@ -154,9 +138,18 @@ def selectPrincipalAccount():
 
 
 # Fucntion to calling account and printing all accounts' balances
-def listAccounts():        
-    for idx, account in enumerate(web3.eth.accounts):                
-        print(f'[{idx+1}] Balance of {account} : {toEther(web3.eth.getBalance(account))} ETH')            
+def listAccounts():
+    # clearing the lists
+    _recipient_wallet_addresses.clear()            
+    _recipient_wallet_balance_ether.clear()
+    _recipient_wallet_balance_usd.clear()
+    for idx, account in enumerate(web3.eth.accounts):
+        _recipient_wallet_addresses.insert(idx, account)
+        _recipient_wallet_balance_ether.insert(idx, str(toEther(web3.eth.getBalance(account))))
+        _recipient_wallet_balance_usd.insert(idx, toUSD(web3.eth.getBalance(account)))
+        print(f'[{idx+1}] Balance of {account} : {toEther(web3.eth.getBalance(account))} ETH')
+
+    return _recipient_wallet_addresses, _recipient_wallet_balance_ether, _recipient_wallet_balance_usd
 
 
 # Function to transfer ethereum
@@ -223,8 +216,7 @@ def index():
     account_name = extractAccounts()
     dataLen = len(account_name)
     print(account_name)    
-    # print(account_name[1])
-    # option = request.form.getlist('options')    
+    # print(account_name[1])       
     # initial_hello = getHelloFromBlockchain()    
     # initial_length = getLengthFromBlockchain()
     # initial_contents = getContentsFromBlockchain()
@@ -234,11 +226,17 @@ def index():
         
 @app.route('/selectdata', methods=['POST'])
 def selectInput():
-    stringValue = request.form['searchValue']
-    newValue = int(stringValue)
-    print("Search Input Data :", newValue)
+    # stringValue = request.form['searchValue']
+    # newValue = int(stringValue)
+    principalAddress = request.form.getlist('options') 
+    print("Selected Option Data :", principalAddress)
+    recipientLists = listAccounts()
+    dataLen = len(recipientLists)    
+    print(dataLen)
     # searchArrayValue(newValue)
-    return redirect(url_for('index'))
+    # return redirect(url_for('index'))
+    return render_template('display.html', value0=principalAddress, value1=recipientLists, value2=dataLen)
+
     
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
