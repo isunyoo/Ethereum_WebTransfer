@@ -16,8 +16,11 @@ API_URL = config('ETHSCAN_URL')
 _global_decrypted_key = ''
 _global_wallet_addresses = []
 _global_wallet_balances = []
+<<<<<<< HEAD
 _global_wallet_balance_ether = []
 _global_wallet_balance_usd = []
+=======
+>>>>>>> 1450691a5896129ba3e60b11db9e635a8b86df30
 _global_addresses_cipher = []
 _global_principal_address = ''
 _global_wallet_address_counts = 0
@@ -85,6 +88,7 @@ def extractAccounts():
         with open(single_file, 'r') as sf:            
             json_file = json.load(sf)                 
             global _global_wallet_address_counts                   
+<<<<<<< HEAD
             _global_wallet_addresses.insert(idx, web3.toChecksumAddress(json_file["address"]))            
             _global_addresses_cipher.insert(idx, json_file["crypto"]["ciphertext"])            
             # print("Account_Cipher :", _global_addresses_cipher[idx])
@@ -101,6 +105,29 @@ def extractAccounts():
             keyfile.close()
     
     return _global_wallet_addresses, _global_addresses_cipher, _global_wallet_balance_ether, _global_wallet_balance_usd
+=======
+            _global_wallet_addresses.insert(idx, web3.toChecksumAddress(json_file["address"]))
+            # _cipher = json_file["crypto"]["ciphertext"]
+            _global_addresses_cipher.insert(idx, json_file["crypto"]["ciphertext"])
+            # print(single_file)                        
+            # print(f"[{idx+1}]Account_Address : {_global_wallet_addresses}")
+            # print("Account_Cipher :", _cipher)
+            print("Account_Cipher :", _global_addresses_cipher[idx])
+            _global_wallet_address_counts += 1
+            sf.close()
+                        
+        with open(single_file, 'r') as keyfile:        
+            _encrypted_key = keyfile.read()            
+            # balance = web3.eth.getBalance(_global_wallet_addresses[idx])
+            _global_wallet_balances.insert(idx, web3.eth.getBalance(_global_wallet_addresses[idx]))
+            print("Private_Key :", binascii.b2a_hex(w3.eth.account.decrypt(_encrypted_key, ACCOUNT_KEY)).decode('ascii'))    
+            # print("Ether Balance :", toEther(balance),"ETH =",toUSD(balance),"$USD\n")            
+            print("Ether Balance :", toEther(_global_wallet_balances[idx]),"ETH =",toUSD(_global_wallet_balances[idx]),"$USD\n")     
+            keyfile.close()
+
+    # return _global_wallet_addresses, _cipher, binascii.b2a_hex(w3.eth.account.decrypt(_encrypted_key, ACCOUNT_KEY)).decode('ascii'), float(toEther(balance)), toUSD(balance)
+    return _global_wallet_addresses, _global_addresses_cipher, _global_wallet_balances
+>>>>>>> 1450691a5896129ba3e60b11db9e635a8b86df30
 
 
 # Function to select principle account
@@ -202,10 +229,16 @@ app.config['SECRET_KEY'] = '12345'
 @app.route('/', methods=['GET', 'POST'])
 def index():    
     account_name = extractAccounts()
+<<<<<<< HEAD
     dataLen = len(account_name)
     print(account_name)    
     # print(account_name[1])
     # option = request.form.getlist('options')    
+=======
+    print(account_name)
+    print(len(account_name))
+    print(account_name[1])
+>>>>>>> 1450691a5896129ba3e60b11db9e635a8b86df30
     # initial_hello = getHelloFromBlockchain()    
     # initial_length = getLengthFromBlockchain()
     # initial_contents = getContentsFromBlockchain()
