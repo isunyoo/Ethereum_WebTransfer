@@ -33,7 +33,15 @@
         }
     </script>
     <h3>Welcome to Ether Transfer Web</h3>    
-    <h1>Account Name: {{ value0 }}</h1>    
+    <h1>Account Name: {{ value0[1][1] }}</h1>        
+    <form name="selectForm" action="/selectdata" method="post" onsubmit="return selectInput()">
+        {% for i in range(value1-1): %}
+        <p>
+        <input type="radio" name="options" id="option1"> Account Address: {{ value0[0][i] }} , ETHER: {{ value0[2][i] }} = USD: {{ value0[3][i] }} <br>        
+        </p>        
+        {% endfor %}
+        <p><input type=submit value=Next></p>
+    </form>
 </body>
 
 </html>
