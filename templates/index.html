@@ -9,7 +9,7 @@
 <body>
     <script type="text/javascript">
         function checkSelect() {
-            var selectx = document.forms["selectForm"]["options"].value;
+            var selectx = document.forms["selectForm"]["principle"].value;
             if (isNaN(selectx) || selectx == "") {
                 alert("Please select your principle address[#]");
                 return false;
@@ -19,10 +19,10 @@
     <h3>Welcome to Ether Transfer Principle Web</h3>
     <!-- <h1>Account Name: {{ value0[1][1] }}</h1> -->
     <h1>Select your principle address[#]</h1>
-    <form name="selectForm" action="/selectdata" method="post" onsubmit="return checkSelect()">
+    <form name="selectForm" action="/selectPrincipalData" method="post" onsubmit="return checkSelect()">
         {% for i in range(value1-1): %}
         <p>
-            <input type="radio" name="options" id="option" value={{value0[0][i]}}>{{[i+1]}} Account Address: {{ value0[0][i] }} , ETHER: {{ value0[2][i] }} = USD: {{ value0[3][i] }} <br>
+            <input type="radio" name="principle" id="option" value={{value0[0][i]}}>{{[i+1]}} Account Address: {{ value0[0][i] }} , ETHER: {{ value0[2][i] }} = USD: {{ value0[3][i] }} <br>
         </p>
         {% endfor %}
         <p><input type=submit value=Select></p>

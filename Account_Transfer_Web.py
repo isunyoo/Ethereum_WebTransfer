@@ -14,13 +14,14 @@ API_URL = config('ETHSCAN_URL')
 
 # Global variables
 _global_decrypted_key = ''
+_global_principal_address = ''
+_global_recipient_address = ''
+_global_wallet_address_counts = 0
 _global_wallet_addresses = []
 _global_wallet_balances = []
 _global_wallet_balance_ether = []
 _global_wallet_balance_usd = []
 _global_addresses_cipher = []
-_global_principal_address = ''
-_global_wallet_address_counts = 0
 _recipient_wallet_addresses = []
 _recipient_wallet_balance_ether = []
 _recipient_wallet_balance_usd = []
@@ -222,21 +223,38 @@ def index():
     # initial_contents = getContentsFromBlockchain()
     # initial_sum = getSumFromBlockchain()    
     # return render_template('index.html', value0=default_account, value1=initial_hello, value2=initial_length, value3=initial_contents, value4=initial_sum)
-    return render_template('index.html', value0=account_name, value1=dataLen)
+    return render_template('index.html', value0=account_name, value1=dataLen)    
         
-@app.route('/selectdata', methods=['POST'])
-def selectInput():
-    # stringValue = request.form['searchValue']
-    # newValue = int(stringValue)
-    principalAddress = request.form.getlist('options') 
-    print("Selected Option Data :", principalAddress)
-    recipientLists = listAccounts()
-    dataLen = len(recipientLists)    
-    print(dataLen)
-    # searchArrayValue(newValue)
+@app.route('/selectPrincipalData', methods=['POST'])
+def selectPrincipalInput():
+    global _global_principal_address
+    principalAddress = request.form.getlist('principle') 
+    _global_principal_address = principalAddress
+    # print("Selected Principal Data :", principalAddress)
+    recipientLists = listAccounts()    
+    dataLen = len(recipientLists[0])            
     # return redirect(url_for('index'))
-    return render_template('display.html', value0=principalAddress, value1=recipientLists, value2=dataLen)
+    return render_template('recipient_display.html', value0=principalAddress, value1=recipientLists, value2=dataLen)
 
+@app.route('/sendEther', methods=['POST'])
+def selectRecipientInput():
+    global _global_recipient_address
+    principalAddress = _global_principal_address
+    recipientAddress = request.form.getlist('recipient') 
+    _global_recipient_address = recipientAddress
+    # print("Selected Recipient Data :", recipientAddress)    
+    return render_template('ether_display.html', value0=principalAddress, value1=recipientAddress)
+
+@app.route('/transferEther', methods=['POST'])
+def etherTransaction():    
+    principalAddress = _global_principal_address
+    recipientAddress = _global_recipient_address 
+    etherAmount = request.form.getlist('inputEtherValue') 
+    print(principalAddress, recipientAddress, etherAmount)    
+    # print("Selected Recipient Data :", recipientAddress)    
+    # return render_template('ether_display.html', value0=principalAddress, value1=recipientAddress)
+    return redirect(url_for('index'))
+    
     
 if __name__ == '__main__':
     app.run(debug=True, port=5000)

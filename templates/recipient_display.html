@@ -9,7 +9,7 @@
 <body>
     <script type="text/javascript">
         function checkSelect() {
-            var selectx = document.forms["selectForm"]["options"].value;
+            var selectx = document.forms["selectForm"]["recipient"].value;
             if (isNaN(selectx) || selectx == "") {
                 alert("Please select your recipient address[#]");
                 return false;
@@ -17,20 +17,17 @@
         }
     </script>
     <h3>Welcome to Ether Transfer Recipient Web</h3>
-    <h1>Selected Principle Account Name: {{ value0 }}</h1>
+    <h1>Selected Principle Account Address: {{ value0 }}</h1>
     <h1>Please select your recipient address[#]</h1>
     <form name="selectForm" action="/sendEther" method="post" onsubmit="return checkSelect()">
-        {% for i in range(value2-1): %}
+        {% for i in range(value2): %}
         <p>
-            <input type="radio" name="options" id="option" value={{value1[0][i]}}>{{[i+1]}} Balance of {{ value1[0][i] }} , ETHER: {{ value1[1][i] }} = USD: {{ value1[2][i] }} <br>
+            <input type="radio" name="recipient" id="option" value={{value1[0][i]}}>{{[i+1]}} Balance of {{ value1[0][i] }} , ETHER: {{ value1[1][i] }} = USD: {{ value1[2][i] }} <br>
         </p>
         {% endfor %}
         <p><input type=submit value=Select></p>
-    </form>
-    <h1>{{ value1 }}</h1>
-    <!-- <h3>Previous Greeting: </h3>    
-    <h3>Output Greeting: </h3>    
-    <a href="{{ url_for('index') }}">Go back</a> -->
+    </form>        
+    <a href="{{ url_for('index') }}">Go back to Main</a>
 </body>
 
 </html>

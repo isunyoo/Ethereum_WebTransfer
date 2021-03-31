@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Ethereum Transfer Web</title>
+</head>
+
+<body>
+    <script type="text/javascript">
+        function checkInput() {
+            var inputx = document.forms["etherInputForm"]["inputEtherValue"].value;
+            if (isNaN(inputx) || inputx == "") {
+                alert("Input value Must numbers");
+                return false;
+            }
+        }
+    </script>
+    <h3>Welcome to Ether Transfer Recipient Web</h3>
+    <h1>Selected Principle Account Address: {{ value0 }}</h1>
+    <h1>Selected Recipient Account Address: {{ value1 }}</h1>
+    <form name="etherInputForm" action="/transferEther" onsubmit="return checkInput()" method="post">
+        <div class="form-group">
+            <label for="inputValue"><h2>Enter your amounts of ethererum(ETH) to send: </h2></label> {% for message in get_flashed_messages(category_filter=['add']) %}
+            <p>{{ message }}</p> {% endfor %}
+            <textarea name="inputEtherValue" placeholder="Amount of ethererum(ETH)" class="form-control">{{ request.form['inputEtherValue'] }}</textarea>
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">Transfer</button>
+        </div>
+    </form>
+    <a href="{{ url_for('index') }}">Go back to Main</a>
+</body>
+
+</html>
