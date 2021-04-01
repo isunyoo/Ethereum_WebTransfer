@@ -107,6 +107,28 @@ def extractAccounts():
     return _global_wallet_addresses, _global_addresses_cipher, _global_wallet_balance_ether, _global_wallet_balance_usd
 
 
+# Function to extract principal account cipher
+def extractPrincipalCipher(principalAddress):     
+    # Local Lists variables
+    _principal_addresses_cipher = ''
+    _local_principal_addresses = []
+    _local_principal_addresses_cipher = []    
+
+    # Change the glob if you want to only look through files with specific names
+    files = glob.glob(f'{KFILE_HOME}/*', recursive=True)
+    
+    # Loop through multiple files    
+    for idx, single_file in enumerate(files):
+        with open(single_file, 'r') as sf:            
+            json_file = json.load(sf)                                             
+            _local_principal_addresses.insert(idx, web3.toChecksumAddress(json_file["address"]))            
+            _local_principal_addresses_cipher.insert(idx, json_file["crypto"]["ciphertext"])                        
+            sf.close()
+        if(str(principalAddress) == str(_local_principal_addresses[idx])): _principal_addresses_cipher = _local_principal_addresses_cipher[idx]            
+        
+    return _principal_addresses_cipher
+
+
 # Function to select principle account
 def selectPrincipalAccount(): 
     # Change the glob if you want to only look through files with specific names
@@ -153,7 +175,7 @@ def listAccounts():
     return _recipient_wallet_addresses, _recipient_wallet_balance_ether, _recipient_wallet_balance_usd
 
 
-# Function to transfer ethereum
+# Function to transfer console ethereum
 def sendEther(rec_num, donor_addr):
     # Define the recipient address     
     recipient_Address = ''
@@ -170,6 +192,36 @@ def sendEther(rec_num, donor_addr):
       
     # get the nounce
     nonce = web3.eth.getTransactionCount(donor_addr)
+
+    # build a transaction
+    tx = {
+        'nonce': nonce,
+        'to': recipient_Address,        
+        'value': web3.toWei(amounts, 'ether'),
+        'gas': 2000000,
+        'gasPrice': web3.toWei('50', 'gwei')
+    }
+
+    # sign a transaction
+    signed_tx = web3.eth.account.signTransaction(tx, _global_decrypted_key)
+
+    # send a transaction
+    tx_hash = web3.eth.sendRawTransaction(signed_tx.rawTransaction)
+
+    # decodes the transaction data    
+    print("\nTransaction Number:", web3.toHex(tx_hash))    
+    print("From:", web3.eth.getTransactionReceipt(tx_hash)['from'], ", To:", web3.eth.getTransactionReceipt(tx_hash)['to'])               
+    print("Transaction Amount:", web3.eth.getTransaction(tx_hash)['value'], "Wei (", toEther(web3.eth.getTransaction(tx_hash)['value']),"ETH =", toTransUSD(toEther(web3.eth.getTransaction(tx_hash)['value'])),"$USD) , GasPrice:", web3.eth.getTransaction(tx_hash)['gasPrice'])
+    print("GasUsed:", web3.eth.getTransactionReceipt(tx_hash)['gasUsed'])
+    print(web3.eth.getTransactionReceipt(tx_hash)['status']==1 and "The transaction was successful." or "The transaction was reverted by EVM.")
+
+    # Function to transfer web ethereum
+def sendWebEther(reci_addr, donor_addr, amounts):
+    # Define the recipient address     
+    recipient_Address = str(reci_addr)
+      
+    # get the nounce
+    nonce = web3.eth.getTransactionCount(str(donor_addr))
 
     # build a transaction
     tx = {
@@ -228,9 +280,9 @@ def index():
 @app.route('/selectPrincipalData', methods=['POST'])
 def selectPrincipalInput():
     global _global_principal_address
-    principalAddress = request.form.getlist('principle') 
-    _global_principal_address = principalAddress
-    # print("Selected Principal Data :", principalAddress)
+    principalAddress = request.form['principle']
+    _global_principal_address = principalAddress    
+    print(extractPrincipalCipher(principalAddress))    
     recipientLists = listAccounts()    
     dataLen = len(recipientLists[0])            
     # return redirect(url_for('index'))
@@ -240,7 +292,7 @@ def selectPrincipalInput():
 def selectRecipientInput():
     global _global_recipient_address
     principalAddress = _global_principal_address
-    recipientAddress = request.form.getlist('recipient') 
+    recipientAddress = request.form.getlist('recipient')  
     _global_recipient_address = recipientAddress
     # print("Selected Recipient Data :", recipientAddress)    
     return render_template('ether_display.html', value0=principalAddress, value1=recipientAddress)
@@ -250,7 +302,8 @@ def etherTransaction():
     principalAddress = _global_principal_address
     recipientAddress = _global_recipient_address 
     etherAmount = request.form.getlist('inputEtherValue') 
-    print(principalAddress, recipientAddress, etherAmount)    
+    print(principalAddress, recipientAddress, etherAmount)
+    sendWebEther(recipientAddress, principalAddress, etherAmount)
     # print("Selected Recipient Data :", recipientAddress)    
     # return render_template('ether_display.html', value0=principalAddress, value1=recipientAddress)
     return redirect(url_for('index'))
