@@ -216,24 +216,28 @@ def sendEther(rec_num, donor_addr):
     print(web3.eth.getTransactionReceipt(tx_hash)['status']==1 and "The transaction was successful." or "The transaction was reverted by EVM.")
 
     # Function to transfer web ethereum
-def sendWebEther(reci_addr, donor_addr, amounts):
-    # Define the recipient address     
-    recipient_Address = str(reci_addr)
-      
+def sendWebEther(reci_addr, donor_addr, amounts):    
+          
     # get the nounce
-    nonce = web3.eth.getTransactionCount(str(donor_addr))
+    nonce = web3.eth.getTransactionCount(donor_addr)
 
     # build a transaction
     tx = {
         'nonce': nonce,
-        'to': recipient_Address,        
+        'to': reci_addr,        
         'value': web3.toWei(amounts, 'ether'),
         'gas': 2000000,
         'gasPrice': web3.toWei('50', 'gwei')
     }
+    
+    # sign a transaction    
+    signed_tx = web3.eth.account.signTransaction(tx, extractPrincipalCipher(donor_addr))
 
-    # sign a transaction
-    signed_tx = web3.eth.account.signTransaction(tx, _global_decrypted_key)
+    print('reci_addr:', reci_addr)
+    print('donor_addr:', donor_addr)
+    print('nonce:', nonce)
+    print('PrincipalCipher:', extractPrincipalCipher(donor_addr))
+    print('signed_tx:', signed_tx)
 
     # send a transaction
     tx_hash = web3.eth.sendRawTransaction(signed_tx.rawTransaction)
@@ -267,43 +271,32 @@ app.config['SECRET_KEY'] = '12345'
 @app.route('/', methods=['GET', 'POST'])
 def index():    
     account_name = extractAccounts()
-    dataLen = len(account_name)
-    print(account_name)    
-    # print(account_name[1])       
-    # initial_hello = getHelloFromBlockchain()    
-    # initial_length = getLengthFromBlockchain()
-    # initial_contents = getContentsFromBlockchain()
-    # initial_sum = getSumFromBlockchain()    
-    # return render_template('index.html', value0=default_account, value1=initial_hello, value2=initial_length, value3=initial_contents, value4=initial_sum)
+    dataLen = len(account_name[0])    
+    print(account_name)        
     return render_template('index.html', value0=account_name, value1=dataLen)    
         
 @app.route('/selectPrincipalData', methods=['POST'])
 def selectPrincipalInput():
-    global _global_principal_address
-    principalAddress = request.form['principle']
-    _global_principal_address = principalAddress    
-    print(extractPrincipalCipher(principalAddress))    
+    global _global_principal_address    
+    _global_principal_address = request.form['principle']
+    # print(extractPrincipalCipher(principalAddress))    
     recipientLists = listAccounts()    
-    dataLen = len(recipientLists[0])            
-    # return redirect(url_for('index'))
-    return render_template('recipient_display.html', value0=principalAddress, value1=recipientLists, value2=dataLen)
+    dataLen = len(recipientLists[0])                    
+    return render_template('recipient_display.html', value0=_global_principal_address, value1=recipientLists, value2=dataLen)
 
 @app.route('/sendEther', methods=['POST'])
 def selectRecipientInput():
-    global _global_recipient_address
-    principalAddress = _global_principal_address
-    recipientAddress = request.form.getlist('recipient')  
-    _global_recipient_address = recipientAddress
-    # print("Selected Recipient Data :", recipientAddress)    
-    return render_template('ether_display.html', value0=principalAddress, value1=recipientAddress)
+    global _global_principal_address, _global_recipient_address    
+    _global_recipient_address = request.form['recipient']    
+    # print("Selected Recipient Data :", recipientAddress)        
+    return render_template('ether_display.html', value0=_global_principal_address, value1=_global_recipient_address)
 
 @app.route('/transferEther', methods=['POST'])
 def etherTransaction():    
-    principalAddress = _global_principal_address
-    recipientAddress = _global_recipient_address 
-    etherAmount = request.form.getlist('inputEtherValue') 
-    print(principalAddress, recipientAddress, etherAmount)
-    sendWebEther(recipientAddress, principalAddress, etherAmount)
+    global _global_principal_address, _global_recipient_address        
+    etherAmount = request.form['inputEtherValue']
+    print(_global_recipient_address, _global_principal_address, etherAmount)
+    sendWebEther(_global_recipient_address, _global_principal_address, etherAmount)
     # print("Selected Recipient Data :", recipientAddress)    
     # return render_template('ether_display.html', value0=principalAddress, value1=recipientAddress)
     return redirect(url_for('index'))
