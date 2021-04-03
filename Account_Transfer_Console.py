@@ -41,28 +41,6 @@ def toTransUSD(balance):
     return str(usd_trans_sum)[:str(usd_trans_sum).index(".") + 3] 
     
 
-# Function to account creation with images
-def accountCreation(account_num):
-    web3.eth.defaultAccount = web3.eth.accounts[account_num]
-    print("Default Account:", web3.eth.defaultAccount)
-
-    # # Identicon Setup the padding(top, bottom, left, right) in pixels.
-    # padding = (10, 10, 10, 10)
-    # identicon_png = icon.generator.generate(web3.eth.defaultAccount, 20, 20, padding=padding, output_format="png")
-    # # Identicon can be easily saved to a file.
-    # f = open("static/images/%s.png" % (web3.eth.defaultAccount), "wb")
-    # f.write(identicon_png)
-    # f.close()
-    # #Creating an instance of QRCode image
-    # qr = qrcode.QRCode(version=1, box_size=5, border=5)
-    # qr.add_data(web3.eth.defaultAccount)
-    # qr.make(fit=True)
-    # img = qr.make_image(fill='black', back_color='white')
-    # img.save('static/images/%s_qrcode.png' % (web3.eth.defaultAccount))
-
-    return web3.eth.defaultAccount
-
-
 # Function to extract all accounts from geth
 def extractAccounts(): 
     # Change the glob if you want to only look through files with specific names

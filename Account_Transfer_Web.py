@@ -1,7 +1,8 @@
-import json, binascii, requests, glob
 from web3 import Web3
 from web3.auto import w3
 from decouple import config
+import Pydenticon_Generator as icon
+import json, binascii, requests, glob, qrcode
 from flask import Flask, render_template, request, redirect, url_for, flash, Markup
 
 ganache_url = "HTTP://127.0.0.1:8545"
@@ -48,26 +49,21 @@ def toTransUSD(balance):
     return str(usd_trans_sum)[:str(usd_trans_sum).index(".") + 3] 
     
 
-# Function to account creation with images
-def accountCreation(account_num):
-    web3.eth.defaultAccount = web3.eth.accounts[account_num]
-    print("Default Account:", web3.eth.defaultAccount)
-
-    # # Identicon Setup the padding(top, bottom, left, right) in pixels.
-    # padding = (10, 10, 10, 10)
-    # identicon_png = icon.generator.generate(web3.eth.defaultAccount, 20, 20, padding=padding, output_format="png")
-    # # Identicon can be easily saved to a file.
-    # f = open("static/images/%s.png" % (web3.eth.defaultAccount), "wb")
-    # f.write(identicon_png)
-    # f.close()
-    # #Creating an instance of QRCode image
-    # qr = qrcode.QRCode(version=1, box_size=5, border=5)
-    # qr.add_data(web3.eth.defaultAccount)
-    # qr.make(fit=True)
-    # img = qr.make_image(fill='black', back_color='white')
-    # img.save('static/images/%s_qrcode.png' % (web3.eth.defaultAccount))
-
-    return web3.eth.defaultAccount
+# Function to generate account images
+def accountImageCreation(account_address):    
+    # Identicon Setup the padding(top, bottom, left, right) in pixels.
+    padding = (10, 10, 10, 10)
+    identicon_png = icon.generator.generate(account_address, 20, 20, padding=padding, output_format="png")
+    # Identicon can be easily saved to a file.
+    f = open("static/images/%s.png" % (account_address), "wb")
+    f.write(identicon_png)
+    f.close()
+    #Creating an instance of QRCode image
+    qr = qrcode.QRCode(version=1, box_size=5, border=5)
+    qr.add_data(account_address)
+    qr.make(fit=True)
+    img = qr.make_image(fill='black', back_color='white')
+    img.save('static/images/%s_qrcode.png' % (account_address))  
 
 
 # Function to extract all accounts from geth
@@ -168,21 +164,17 @@ def sendWebEther(reci_addr, donor_addr, amounts):
     Wei_Amount = web3.eth.getTransaction(tx_hash)['value']
     Eth_Amount = toEther(web3.eth.getTransaction(tx_hash)['value'])
     Usd_Amount = toTransUSD(toEther(web3.eth.getTransaction(tx_hash)['value']))
-    Gas_Fees = web3.eth.getTransaction(tx_hash)['gasPrice']
-    Gas_Used = web3.eth.getTransactionReceipt(tx_hash)['gasUsed']
-    # print(web3.eth.getTransactionReceipt(tx_hash)['status']==1 and "The transaction was successful." or "The transaction was reverted by EVM.")
-    # print("\nTransaction Number:", web3.toHex(tx_hash))    
-    # print("From:", web3.eth.getTransactionReceipt(tx_hash)['from'], ", To:", web3.eth.getTransactionReceipt(tx_hash)['to'])               
-    # print("Transaction Amount:", web3.eth.getTransaction(tx_hash)['value'], "Wei (", toEther(web3.eth.getTransaction(tx_hash)['value']),"ETH =", toTransUSD(toEther(web3.eth.getTransaction(tx_hash)['value'])),"$USD) , GasPrice:", web3.eth.getTransaction(tx_hash)['gasPrice'])
-    # print("GasUsed:", web3.eth.getTransactionReceipt(tx_hash)['gasUsed'])    
+    Gas_Fees_Wei = web3.eth.getTransaction(tx_hash)['gasPrice']
+    Gas_Fees_Eth = '{:.10f}'.format(web3.eth.getTransaction(tx_hash)['gasPrice'])
+    Gas_Used = web3.eth.getTransactionReceipt(tx_hash)['gasUsed']    
 
-    return Tx_Status, Tx_Num, Frome, To, Wei_Amount, Eth_Amount, Usd_Amount, Gas_Fees, Gas_Used
+    return Tx_Status, Tx_Num, Frome, To, Wei_Amount, Eth_Amount, Usd_Amount, Gas_Fees_Wei, Gas_Fees_Eth, Gas_Used
 
 
 # Function of Tx results data 
 def txResultData(tx_result):
     if(tx_result[0] == 1):              
-        message = Markup(f'The transaction was successful.<br>Transaction Number: {tx_result[1]}<br>From: {tx_result[2]}, To: {tx_result[3]}<br>Transaction Amount: {tx_result[4]} Wei ({tx_result[5]} ETH = {tx_result[6]} $USD)<br>GasPrice: {tx_result[7]}, GasUsed: {tx_result[8]}')        
+        message = Markup(f'The transaction was successful.<br>Transaction Number: {tx_result[1]}<br>From: {tx_result[2]}<br>To: {tx_result[3]}<br>Transaction Amount: {tx_result[4]} Wei = {tx_result[5]} ETH = {tx_result[6]} $USD<br>GasPrice: {tx_result[7]} Wei = {tx_result[8]} ETH<br>GasUsed: {tx_result[9]}') 
         flash(message, 'results') 
     else:
         message = "The transaction was failed and reverted by EVM."
@@ -210,6 +202,7 @@ def selectPrincipalInput():
     global _global_principal_address    
     _global_principal_address = request.form['principle']
     # print(extractPrincipalCipher(principalAddress))    
+    accountImageCreation(_global_principal_address)
     recipientLists = listAccounts()    
     dataLen = len(recipientLists[0])                    
     return render_template('recipient_display.html', value0=_global_principal_address, value1=recipientLists, value2=dataLen)
@@ -219,6 +212,7 @@ def selectRecipientInput():
     global _global_principal_address, _global_recipient_address    
     _global_recipient_address = request.form['recipient']    
     # print("Selected Recipient Data :", recipientAddress)        
+    accountImageCreation(_global_recipient_address)
     return render_template('ether_display.html', value0=_global_principal_address, value1=_global_recipient_address)
 
 @app.route('/transferEther', methods=['POST'])

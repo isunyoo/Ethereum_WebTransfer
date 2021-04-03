@@ -17,7 +17,7 @@
         }
     </script>
     <h3>Welcome to Ether Transfer Recipient Web</h3>
-    <h1>Selected Principle Account Address: {{ value0 }}</h1>
+    <h1>Selected Principle Account Address: <img src="{{url_for('static', filename='images/'+value0+'.png')}}" align="middle" /> {{ value0 }} <img src="{{url_for('static', filename='images/'+value0+'_qrcode.png')}}" align="middle" /></h1>
     <h1>Please select your recipient address[#]</h1>
     <form name="selectForm" action="/sendEther" method="post" onsubmit="return checkSelect()">
         {% for i in range(value2): %}
@@ -26,7 +26,7 @@
         </p>
         {% endfor %}
         <p><input type=submit value=Select></p>
-    </form>        
+    </form>
     <a href="{{ url_for('index') }}">Go back to Main</a>
 </body>
 

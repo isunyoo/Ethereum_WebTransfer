@@ -17,7 +17,6 @@
         }
     </script>
     <h3>Welcome to Ether Transfer Principle Web</h3>
-    <!-- <h1>Account Name: {{ value0[1][1] }}</h1> -->
     <h1>Select your principle address[#]</h1>
     <form name="selectForm" action="/selectPrincipalData" method="post" onsubmit="return checkSelect()">
         {% for i in range(value1): %}
@@ -26,9 +25,9 @@
         </p>
         {% endfor %}
         <p><input type=submit value=Select></p>
-        {% for message in get_flashed_messages(category_filter=['results']) %}<p>{{ message }}</p> {% endfor %}
+        {% for message in get_flashed_messages(category_filter=['results']) %}
+        <p>{{ message }}</p> {% endfor %}
     </form>
 </body>
 
 </html>
-
