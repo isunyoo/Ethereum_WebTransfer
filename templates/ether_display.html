@@ -23,8 +23,27 @@
         <div class="form-group">
             <label for="inputValue"><h2>Enter your amounts of ethererum(ETH) to send: </h2></label> {% for message in get_flashed_messages(category_filter=['add']) %}
             <p>{{ message }}</p> {% endfor %}
-            <textarea name="inputEtherValue" placeholder="Amount of ethererum(ETH)" class="form-control">{{ request.form['inputEtherValue'] }}</textarea>
+            <textarea name="inputEtherValue" id="inputEtherValue" placeholder="Amount of ethererum(ETH)" class="form-control">{{ request.form['inputEtherValue'] }}</textarea>
         </div>
+        <div id="convert_usd_currency"></div>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+        <script>
+        $("#inputEtherValue").keyup(function(){
+            var text = $(this).val();
+
+            $.ajax({
+            url: "/suggestions",
+            type: "get",
+            data: {jsdata: text},
+            success: function(response) {
+                $("#place_for_suggestions").html(response);
+            },
+            error: function(xhr) {
+                //Do Something to handle error
+            }
+            });
+        });
+        </script>
         <div class="form-group">
             <button type="submit" class="btn btn-primary">Transfer</button>
         </div>

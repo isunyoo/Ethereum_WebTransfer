@@ -22,11 +22,13 @@
     <form name="selectForm" action="/selectPrincipalData" method="post" onsubmit="return checkSelect()">
         {% for i in range(value1): %}
         <p>
-            <input type="radio" name="principle" id="option" value={{value0[0][i]}}>{{[i+1]}} Account Address: {{ value0[0][i] }} , ETHER: {{ value0[2][i] }} = USD: {{ value0[3][i] }} <br>
+            <input type="radio" name="principle" id="option" value={{value0[0][i]}}>{{[i+1]}} Account Address: {{ value0[0][i] }} , ETHER: {{ value0[1][i] }} = USD: {{ value0[2][i] }} <br>
         </p>
         {% endfor %}
         <p><input type=submit value=Select></p>
+        {% for message in get_flashed_messages(category_filter=['results']) %}<p>{{ message }}</p> {% endfor %}
     </form>
 </body>
 
 </html>
+
