@@ -165,10 +165,18 @@ def sendWebEther(reci_addr, donor_addr, amounts):
     Eth_Amount = toEther(web3.eth.getTransaction(tx_hash)['value'])
     Usd_Amount = toTransUSD(toEther(web3.eth.getTransaction(tx_hash)['value']))
     Gas_Fees_Wei = web3.eth.getTransaction(tx_hash)['gasPrice']
-    Gas_Fees_Eth = '{:.10f}'.format(web3.eth.getTransaction(tx_hash)['gasPrice'])
+    Gas_Fees_Eth = '{:.8f}'.format(toEther(web3.eth.getTransaction(tx_hash)['gasPrice']))    
     Gas_Used = web3.eth.getTransactionReceipt(tx_hash)['gasUsed']    
 
     return Tx_Status, Tx_Num, Frome, To, Wei_Amount, Eth_Amount, Usd_Amount, Gas_Fees_Wei, Gas_Fees_Eth, Gas_Used
+
+
+# Function to convert USD Currency 
+def dynamicConvertUSD(eth_amount):
+    # tx_hash = contract.functions.addData(new_val).transact()
+    # web3.eth.waitForTransactionReceipt(tx_hash)
+    message = toUSD(eth_amount)+"$USD"
+    flash(message, 'convert')   
 
 
 # Function of Tx results data 
@@ -182,8 +190,8 @@ def txResultData(tx_result):
 
 
 # Connection Verification
-print("Established_Connections :", web3.isConnected())
-print("Current_Block # :", web3.eth.blockNumber, "\n")
+# print("Established_Connections :", web3.isConnected())
+# print("Current_Block # :", web3.eth.blockNumber, "\n")
 
 # Flask http web display
 app = Flask(__name__)
