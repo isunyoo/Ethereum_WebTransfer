@@ -2,8 +2,8 @@ from web3 import Web3
 from web3.auto import w3
 from decouple import config
 import Pydenticon_Generator as icon
-import json, binascii, requests, glob, qrcode
-from flask import Flask, render_template, request, redirect, url_for, flash, Markup
+import json, binascii, requests, glob, qrcode, time
+from flask import Flask, render_template, request, redirect, url_for, flash, Markup, Response
 
 ganache_url = "HTTP://127.0.0.1:8545"
 web3 = Web3(Web3.HTTPProvider(ganache_url))
@@ -223,15 +223,25 @@ def selectRecipientInput():
     accountImageCreation(_global_recipient_address)
     return render_template('ether_display.html', value0=_global_principal_address, value1=_global_recipient_address)
 
-@app.route('/transferEther', methods=['POST'])
-def etherTransaction():    
+@app.route('/transferEther', methods=['POST'])        
+def etherTransaction():        
     global _global_principal_address, _global_recipient_address        
     etherAmount = request.form['inputEtherValue']    
     txResultData(sendWebEther(_global_recipient_address, _global_principal_address, etherAmount))       
     # print("Selected Recipient Data :", recipientAddress)    
     # return render_template('ether_display.html', value0=principalAddress, value1=recipientAddress)
     return redirect(url_for('index'))
+
+@app.route('/progress')
+def progress():
+    def generate():
+        x = 0
+        while x < 100:            
+            x = x + 10
+            time.sleep(0.8)
+            yield "data:" + str(x) + "\n\n"
+    return Response(generate(), mimetype= 'text/event-stream')    
     
     
 if __name__ == '__main__':
-    app.run(debug=True, port=5000)
+    app.run(debug=True, threaded=True, port=5000)
