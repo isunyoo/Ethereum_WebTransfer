@@ -5,71 +5,91 @@
     <meta charset="UTF-8">
     <title>Ethereum Transfer Web</title>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>	
-    <script type="text/javascript">                
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript">
         function checkInput() {
             var inputx = document.forms["etherInputForm"]["inputEtherValue"].value;
-            if (isNaN(inputx) || inputx == "" || inputx == 0) {                
+            if (isNaN(inputx) || inputx == "" || inputx == 0) {
                 alert("Input value Must be numbers");
-                return false;            
-            }     
+                return false;
+            }
         }
-        function progressBar() {                                 
+
+        function progressBar() {
             var source = new EventSource("/progress");
-            var inputx = document.forms["etherInputForm"]["inputEtherValue"].value;            
-            if (!isNaN(inputx) && inputx != "" && inputx != 0) {                
+            var inputx = document.forms["etherInputForm"]["inputEtherValue"].value;
+            if (!isNaN(inputx) && inputx != "" && inputx != 0) {
                 source.onmessage = function(event) {
-                    $('.progress-bar').css('width', event.data+'%').attr('aria-valuenow', event.data);
-                    $('.progress-bar-label').text(event.data+'%');
-                    if(event.data == 100){
+                    $('.progress-bar').css('width', event.data + '%').attr('aria-valuenow', event.data);
+                    $('.progress-bar-label').text(event.data + '%');
+                    if (event.data == 100) {
                         source.close()
                     }
-                }                                    
+                }
             }
-        }          
-        </script>
+        }
+    </script>
 </head>
 
 <body>
     <h3>Welcome to Ether Transfer Recipient Web</h3>
     <h1>Selected Principle Account Address: <img src="{{url_for('static', filename='images/'+value0+'.png')}}" align="middle" /> {{ value0 }} <img src="{{url_for('static', filename='images/'+value0+'_qrcode.png')}}" align="middle" /></h1>
     <h1>Selected Recipient Account Address: <img src="{{url_for('static', filename='images/'+value1+'.png')}}" align="middle" /> {{ value1 }} <img src="{{url_for('static', filename='images/'+value1+'_qrcode.png')}}" align="middle" /></h1>
-    <form name="etherInputForm" action="/transferEther" onsubmit="return checkInput()" method="post">    
-        <div id="convert_usd_currency" class="form-group">                  
-            <label for="inputValue"><h2>Enter your amounts of ethererum(ETH) to send: </h2></label> {% for message in get_flashed_messages(category_filter=['convert']) %}                        
+    <form name="etherInputForm" action="/transferEther" onsubmit="return checkInput()" method="post">
+        <div id="convert_usd_currency" class="form-group">
+            <label for="inputValue"><h2>Enter your amounts of ethererum(ETH) to send: </h2></label>
             <textarea name="inputEtherValue" id="inputEtherValue" placeholder="Amount of ethererum(ETH)" class="form-control" style="width: auto;">{{ request.form['inputEtherValue'] }}</textarea>
-            <p>{{ message }}</p> {% endfor %}
             <script>
                 $("#inputEtherValue").keyup(function() {
                     var text = $(this).val();
                     $.ajax({
-                        // url: "/suggestions",
-                        type: "get",
+                        url: '/convertUSD',
+                        type: 'get',
                         data: {
-                            // jsdata: text
                             eth_amount: text
                         },
                         success: function(response) {
                             // $("#convert_usd_currency").html(response);
-                            alert(response);
+                            // alert(response);
+                            console.log(response);
                         },
-                        error: function(xhr) {
-                            //Do Something to handle error
+                        error: function(error) {
+                            console.log(error);
                         }
                     });
                 });
-           </script>
-        </div>                
+                // $(function() {
+                //     $('button').click(function() {
+                //         var user = $('#inputUsername').val();
+                //         $.ajax({
+                //             url: '/convertUSD',
+                //             data: $('form').serialize(),
+                //             type: 'POST',
+                //             success: function(response) {
+                //                 console.log(response);
+                //             },
+                //             error: function(error) {
+                //                 console.log(error);
+                //             }
+                //         });
+                //     });
+                // });
+            </script>
+        </div>
+        {% for message in get_flashed_messages(category_filter=['convert']) %}
+        <div id="converted_usd" class="form-group">
+            <p>{{ message }}</p>{% endfor %}
+        </div>
         <div class="form-group">
             <button onclick="progressBar()" type="submit" class="btn btn-primary">Transfer</button>
-        </div>                        
-        <div class="progress" style="width: 50%; margin: 50px;">            
+        </div>
+        <div class="progress" style="width: 50%; margin: 50px;">
             <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
                 <span class="progress-bar-label">0%</span>
             </div>
         </div>
-    </form>         
+    </form>
     <a href="{{ url_for('index') }}">Go back to Main</a>
 </body>
 

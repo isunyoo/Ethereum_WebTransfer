@@ -172,10 +172,9 @@ def sendWebEther(reci_addr, donor_addr, amounts):
 
 
 # Function to convert USD Currency 
-def dynamicConvertUSD(eth_amount):
-    # tx_hash = contract.functions.addData(new_val).transact()
-    # web3.eth.waitForTransactionReceipt(tx_hash)
-    message = " = "+str(toTransUSD(eth_amount))+" $USD"
+def dynamicConvertUSD(eth_amount):    
+    # message = " = "+str(toTransUSD(eth_amount))+" $USD"
+    message = " = 123 $USD"
     flash(message, 'convert')   
 
 
@@ -221,7 +220,7 @@ def selectRecipientInput():
     _global_recipient_address = request.form['recipient']    
     # print("Selected Recipient Data :", recipientAddress)        
     accountImageCreation(_global_recipient_address)
-    dynamicConvertUSD(0.0001)
+    # dynamicConvertUSD(0.0001)
     return render_template('ether_display.html', value0=_global_principal_address, value1=_global_recipient_address)
 
 @app.route('/transferEther', methods=['POST'])        
@@ -233,6 +232,16 @@ def etherTransaction():
     # return render_template('ether_display.html', value0=principalAddress, value1=recipientAddress)
     return redirect(url_for('index'))
 
+@app.route('/convertUSD', methods=['GET'])
+def convertUSD():
+    # usdAmount =  int(request.form['inputEtherValue'])    
+    usdAmount =  request.form.get('inputEtherValue', type=int)
+    print(usdAmount)
+    dynamicConvertUSD(usdAmount)
+    return json.dumps({'eth_amount': str(dynamicConvertUSD(usdAmount))})     
+    # return str(usdAmount)
+    # https://stackoverflow.com/questions/12551526/cast-flask-form-value-to-int
+    
 @app.route('/progress')
 def progress():
     def generate():
@@ -243,6 +252,6 @@ def progress():
             yield "data:" + str(x) + "\n\n"
     return Response(generate(), mimetype= 'text/event-stream')    
     
-    
+
 if __name__ == '__main__':
     app.run(debug=True, threaded=True, port=5000)
