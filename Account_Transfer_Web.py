@@ -175,7 +175,7 @@ def sendWebEther(reci_addr, donor_addr, amounts):
 def dynamicConvertUSD(eth_amount):
     # tx_hash = contract.functions.addData(new_val).transact()
     # web3.eth.waitForTransactionReceipt(tx_hash)
-    message = toUSD(eth_amount)+"$USD"
+    message = " = "+str(toTransUSD(eth_amount))+" $USD"
     flash(message, 'convert')   
 
 
@@ -221,6 +221,7 @@ def selectRecipientInput():
     _global_recipient_address = request.form['recipient']    
     # print("Selected Recipient Data :", recipientAddress)        
     accountImageCreation(_global_recipient_address)
+    dynamicConvertUSD(0.0001)
     return render_template('ether_display.html', value0=_global_principal_address, value1=_global_recipient_address)
 
 @app.route('/transferEther', methods=['POST'])        
