@@ -49,9 +49,10 @@
                         type: 'get',
                         // data: {
                         //     eth_amount: value
-                        // },                        
-                        data: JSON.stringify(value),
-                        contentType: 'application/json',
+                        // // },                        
+                        // data: JSON.stringify(value),
+                        // contentType: 'application/json',
+                        data: value,
                         success: function(response) {
                             // $("#convert_usd_currency").html(response);
                             // alert(response);
@@ -61,7 +62,7 @@
                             console.log(error);
                         }
                     });
-                });                
+                });
             </script>
         </div>
         {% for message in get_flashed_messages(category_filter=['convert']) %}

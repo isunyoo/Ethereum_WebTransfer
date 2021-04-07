@@ -234,17 +234,20 @@ def etherTransaction():
     return redirect(url_for('index'))
 
 @app.route('/convertUSD', methods=['GET'])
-def convertUSD():    
-    if request.method == "GET":
-        data = request.get_json()
-        print(data['answers'])
-        return render_template('output.html', data=data)
+def convertUSD(intputAmount):    
+    # if request.method == "GET":
+    #     data = request.get_json()
+    #     print(data['answers'])
+    #     return render_template('output.html', data=data)
 
-
-    usdAmount = request.form.get('inputEtherValue', type=int)
-    print(usdAmount)
-    dynamicConvertUSD(toTransUSD(usdAmount))    
+    print(intputAmount)
     return None
+    
+
+    # usdAmount = request.form.get('inputEtherValue', type=int)
+    # print(usdAmount)
+    # dynamicConvertUSD(toTransUSD(usdAmount))    
+    # return None
     # return json.dumps({'usd_amount': dynamicConvertUSD(usdAmount)})        
     # return str(usdAmount)
     # https://stackoverflow.com/questions/12277933/send-data-from-a-textbox-into-flask
