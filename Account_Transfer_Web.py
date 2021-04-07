@@ -249,9 +249,8 @@ def convertUSD(intputAmount):
     # dynamicConvertUSD(toTransUSD(usdAmount))    
     # return None
     # return json.dumps({'usd_amount': dynamicConvertUSD(usdAmount)})        
-    # return str(usdAmount)
-    # https://stackoverflow.com/questions/12277933/send-data-from-a-textbox-into-flask
-    # https://stackoverflow.com/questions/12551526/cast-flask-form-value-to-int
+    # return str(usdAmount)    
+    # https://www.tutorialsteacher.com/jquery/jquery-get-method
     
 @app.route('/progress')
 def progress():
