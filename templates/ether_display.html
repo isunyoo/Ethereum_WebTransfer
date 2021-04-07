@@ -42,13 +42,16 @@
             <textarea name="inputEtherValue" id="inputEtherValue" placeholder="Amount of ethererum(ETH)" class="form-control" style="width: auto;">{{ request.form['inputEtherValue'] }}</textarea>
             <script>
                 $("#inputEtherValue").keyup(function() {
-                    var text = $(this).val();
+                    var value = $(this).val();
                     $.ajax({
-                        url: '/convertUSD',
+                        // url: '/convertUSD',
+                        url: "{{ url_for('convertUSD') }}",
                         type: 'get',
-                        data: {
-                            eth_amount: text
-                        },
+                        // data: {
+                        //     eth_amount: value
+                        // },                        
+                        data: JSON.stringify(value),
+                        contentType: 'application/json',
                         success: function(response) {
                             // $("#convert_usd_currency").html(response);
                             // alert(response);
@@ -58,23 +61,7 @@
                             console.log(error);
                         }
                     });
-                });
-                // $(function() {
-                //     $('button').click(function() {
-                //         var user = $('#inputUsername').val();
-                //         $.ajax({
-                //             url: '/convertUSD',
-                //             data: $('form').serialize(),
-                //             type: 'POST',
-                //             success: function(response) {
-                //                 console.log(response);
-                //             },
-                //             error: function(error) {
-                //                 console.log(error);
-                //             }
-                //         });
-                //     });
-                // });
+                });                
             </script>
         </div>
         {% for message in get_flashed_messages(category_filter=['convert']) %}

@@ -3,7 +3,7 @@ from web3 import Web3
 from web3.auto import w3
 from decouple import config
 
-ganache_url = "HTTP://127.0.0.1:8545"
+ganache_url = "http://127.0.0.1:8545"
 web3 = Web3(Web3.HTTPProvider(ganache_url))
 
 KFILE_HOME = config('KEYFILE_HOME')

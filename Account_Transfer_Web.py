@@ -5,7 +5,7 @@ import Pydenticon_Generator as icon
 import json, binascii, requests, glob, qrcode, time
 from flask import Flask, render_template, request, redirect, url_for, flash, Markup, Response
 
-ganache_url = "HTTP://127.0.0.1:8545"
+ganache_url = "http://127.0.0.1:8545"
 web3 = Web3(Web3.HTTPProvider(ganache_url))
 
 KFILE_HOME = config('KEYFILE_HOME')
@@ -47,7 +47,7 @@ def toUSD(balance):
 def toTransUSD(balance):
     usd_trans_sum = USD_CURRENCY * float(balance)          
     return str(usd_trans_sum)[:str(usd_trans_sum).index(".") + 3] 
-    
+
 
 # Function to generate account images
 def accountImageCreation(account_address):    
@@ -171,13 +171,6 @@ def sendWebEther(reci_addr, donor_addr, amounts):
     return Tx_Status, Tx_Num, Frome, To, Wei_Amount, Eth_Amount, Usd_Amount, Gas_Fees_Wei, Gas_Fees_Eth, Gas_Used
 
 
-# Function to convert USD Currency 
-def dynamicConvertUSD(eth_amount):    
-    # message = " = "+str(toTransUSD(eth_amount))+" $USD"
-    message = " = 123 $USD"
-    flash(message, 'convert')   
-
-
 # Function of Tx results data 
 def txResultData(tx_result):
     if(tx_result[0] == 1):              
@@ -187,6 +180,14 @@ def txResultData(tx_result):
         message = "The transaction was failed and reverted by EVM."
         flash(message, 'results') 
 
+
+# Function to dynamic convert USD Currency 
+# def dynamicConvertUSD(eth_amount):        
+#     message = " = "+toTransUSD(float(eth_amount))+" $USD"   
+#     flash(message, 'convert')   
+def dynamicConvertUSD(eth_amount):        
+    message = " = "+eth_amount+" $USD"   
+    flash(message, 'convert')   
 
 # Connection Verification
 # print("Established_Connections :", web3.isConnected())
@@ -219,8 +220,8 @@ def selectRecipientInput():
     global _global_principal_address, _global_recipient_address    
     _global_recipient_address = request.form['recipient']    
     # print("Selected Recipient Data :", recipientAddress)        
-    accountImageCreation(_global_recipient_address)
-    # dynamicConvertUSD(0.0001)
+    accountImageCreation(_global_recipient_address)    
+    # dynamicConvertUSD(0.001)
     return render_template('ether_display.html', value0=_global_principal_address, value1=_global_recipient_address)
 
 @app.route('/transferEther', methods=['POST'])        
@@ -233,13 +234,20 @@ def etherTransaction():
     return redirect(url_for('index'))
 
 @app.route('/convertUSD', methods=['GET'])
-def convertUSD():
-    # usdAmount =  int(request.form['inputEtherValue'])    
-    usdAmount =  request.form.get('inputEtherValue', type=int)
+def convertUSD():    
+    if request.method == "GET":
+        data = request.get_json()
+        print(data['answers'])
+        return render_template('output.html', data=data)
+
+
+    usdAmount = request.form.get('inputEtherValue', type=int)
     print(usdAmount)
-    dynamicConvertUSD(usdAmount)
-    return json.dumps({'eth_amount': str(dynamicConvertUSD(usdAmount))})     
+    dynamicConvertUSD(toTransUSD(usdAmount))    
+    return None
+    # return json.dumps({'usd_amount': dynamicConvertUSD(usdAmount)})        
     # return str(usdAmount)
+    # https://stackoverflow.com/questions/12277933/send-data-from-a-textbox-into-flask
     # https://stackoverflow.com/questions/12551526/cast-flask-form-value-to-int
     
 @app.route('/progress')
