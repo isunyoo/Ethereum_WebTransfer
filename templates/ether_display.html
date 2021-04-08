@@ -40,27 +40,38 @@
         <div id="convert_usd_currency" class="form-group">
             <label for="inputValue"><h2>Enter your amounts of ethererum(ETH) to send: </h2></label>
             <textarea name="inputEtherValue" id="inputEtherValue" placeholder="Amount of ethererum(ETH)" class="form-control" style="width: auto;">{{ request.form['inputEtherValue'] }}</textarea>
-            <script>
+            <span id=Convertedresult></span>
+            <!-- <script>
                 $("#inputEtherValue").keyup(function() {
                     var value = $(this).val();
                     $.ajax({
                         // url: '/convertUSD',
                         url: "{{ url_for('convertUSD') }}",
                         type: 'get',
-                        // data: {
-                        //     eth_amount: value
-                        // // },                        
-                        // data: JSON.stringify(value),
-                        // contentType: 'application/json',
                         data: value,
                         success: function(response) {
                             // $("#convert_usd_currency").html(response);
-                            // alert(response);
-                            console.log(response);
+                            alert(response);
+                            console.log(response.convertedValue);
                         },
                         error: function(error) {
-                            console.log(error);
+                            console.log(error.convertedErrorValue);
                         }
+                    });
+                });
+            </script> -->
+            <script type=text/javascript>
+                $("#inputEtherValue").keyup(function() {
+                    var inputValue = $(this).val();
+                    $(function() {
+                        $('#inputEtherValue').bind('click', function() {
+                            $.getJSON('/convertUSD', {
+                                inputEtherValue: inputValue
+                            }, function(data) {
+                                $("#Convertedresult").text(data.result);
+                            });
+                            return false;
+                        });
                     });
                 });
             </script>

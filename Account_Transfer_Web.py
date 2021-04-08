@@ -3,7 +3,7 @@ from web3.auto import w3
 from decouple import config
 import Pydenticon_Generator as icon
 import json, binascii, requests, glob, qrcode, time
-from flask import Flask, render_template, request, redirect, url_for, flash, Markup, Response
+from flask import Flask, render_template, request, redirect, url_for, flash, Markup, Response, jsonify
 
 ganache_url = "http://127.0.0.1:8545"
 web3 = Web3(Web3.HTTPProvider(ganache_url))
@@ -227,30 +227,38 @@ def selectRecipientInput():
 @app.route('/transferEther', methods=['POST'])        
 def etherTransaction():        
     global _global_principal_address, _global_recipient_address        
-    etherAmount = request.form['inputEtherValue']    
+    etherAmount = request.form['inputEtherValue']
     txResultData(sendWebEther(_global_recipient_address, _global_principal_address, etherAmount))       
     # print("Selected Recipient Data :", recipientAddress)    
     # return render_template('ether_display.html', value0=principalAddress, value1=recipientAddress)
     return redirect(url_for('index'))
 
 @app.route('/convertUSD', methods=['GET'])
-def convertUSD(intputAmount):    
+def convertUSD():                
+    convertedValue = request.args.get('inputEtherValue', 123, type=int)    
+    return jsonify(result=convertedValue)
+
     # if request.method == "GET":
     #     data = request.get_json()
-    #     print(data['answers'])
+    #     print(data['inputEtherValue'])
     #     return render_template('output.html', data=data)
 
-    print(intputAmount)
-    return None
-    
+    # if request.form.get('inputEtherValue') == 'success':        
+    #     print(request.args.get('inputEtherValue', 0, type=int))
+    #     return jsonify({'convertedValue': 'successfuly registered'})
+    # return jsonify({'convertedErrorValue': 'registration unsuccessful'})
 
     # usdAmount = request.form.get('inputEtherValue', type=int)
     # print(usdAmount)
     # dynamicConvertUSD(toTransUSD(usdAmount))    
-    # return None
+    
+
     # return json.dumps({'usd_amount': dynamicConvertUSD(usdAmount)})        
     # return str(usdAmount)    
     # https://www.tutorialsteacher.com/jquery/jquery-get-method
+    # https://flask.palletsprojects.com/en/1.1.x/patterns/jquery/
+    # https://stackoverflow.com/questions/46458478/use-jquery-ajax-to-call-a-server-side-function-on-flask
+    # https://www.bogotobogo.com/python/Flask/Python_Flask_with_AJAX_JQuery.php
     
 @app.route('/progress')
 def progress():
