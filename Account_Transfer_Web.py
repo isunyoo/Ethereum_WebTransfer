@@ -235,7 +235,8 @@ def etherTransaction():
 
 @app.route('/convertUSD', methods=['GET'])
 def convertUSD():                
-    convertedValue = request.args.get('inputEtherValue', 123, type=int)    
+    # convertedValue = request.args.get('inputEtherValue', 123, type=int)    
+    convertedValue = request.args.get('inputEtherValue', type=int)    
     return jsonify(result=convertedValue)
 
     # if request.method == "GET":
