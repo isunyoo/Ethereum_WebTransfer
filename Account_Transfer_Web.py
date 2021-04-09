@@ -181,14 +181,6 @@ def txResultData(tx_result):
         flash(message, 'results') 
 
 
-# Function to dynamic convert USD Currency 
-# def dynamicConvertUSD(eth_amount):        
-#     message = " = "+toTransUSD(float(eth_amount))+" $USD"   
-#     flash(message, 'convert')   
-def dynamicConvertUSD(eth_amount):        
-    message = " = "+eth_amount+" $USD"   
-    flash(message, 'convert')   
-
 # Connection Verification
 # print("Established_Connections :", web3.isConnected())
 # print("Current_Block # :", web3.eth.blockNumber, "\n")
@@ -234,10 +226,12 @@ def etherTransaction():
     return redirect(url_for('index'))
 
 @app.route('/convertUSD', methods=['GET'])
-def convertUSD():                
-    # convertedValue = request.args.get('inputEtherValue', 123, type=int)    
-    convertedValue = request.args.get('inputEtherValue', type=int)    
-    return jsonify(result=convertedValue)
+def convertUSD():                    
+    convertedValue = request.args.get('inputEtherValue')       
+    if "".__eq__(convertedValue):
+        return jsonify({'result': 0})    
+    else:
+        return jsonify({'result': toTransUSD(convertedValue)})    
 
     # if request.method == "GET":
     #     data = request.get_json()
@@ -257,9 +251,10 @@ def convertUSD():
     # return json.dumps({'usd_amount': dynamicConvertUSD(usdAmount)})        
     # return str(usdAmount)    
     # https://www.tutorialsteacher.com/jquery/jquery-get-method
-    # https://flask.palletsprojects.com/en/1.1.x/patterns/jquery/
-    # https://stackoverflow.com/questions/46458478/use-jquery-ajax-to-call-a-server-side-function-on-flask
-    # https://www.bogotobogo.com/python/Flask/Python_Flask_with_AJAX_JQuery.php
+    # https://stackoverflow.com/questions/16598213/how-to-bind-events-on-ajax-loaded-content
+    # https://nishitvmaheta.medium.com/how-to-bind-events-on-ajax-loaded-content-using-jquery-eae4162d72e7
+    # https://stackoverflow.com/questions/51025893/flask-at-first-run-do-not-use-the-development-server-in-a-production-environmen
+    
     
 @app.route('/progress')
 def progress():
