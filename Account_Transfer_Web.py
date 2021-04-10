@@ -253,8 +253,8 @@ def convertUSD():
     # https://www.tutorialsteacher.com/jquery/jquery-get-method
     # https://stackoverflow.com/questions/16598213/how-to-bind-events-on-ajax-loaded-content
     # https://nishitvmaheta.medium.com/how-to-bind-events-on-ajax-loaded-content-using-jquery-eae4162d72e7
-    # https://stackoverflow.com/questions/51025893/flask-at-first-run-do-not-use-the-development-server-in-a-production-environmen
-    
+    # https://www.sitepoint.com/community/t/refresh-div-content-without-reloading-page/5353/22
+        
     
 @app.route('/progress')
 def progress():
@@ -267,5 +267,12 @@ def progress():
     return Response(generate(), mimetype= 'text/event-stream')    
     
 
+# Development Debug Environment
 if __name__ == '__main__':
     app.run(debug=True, threaded=True, port=5000)
+
+
+# Production Environment
+# if __name__ == "__main__":
+#     from waitress import serve
+#     serve(app, host="0.0.0.0", port=5000)

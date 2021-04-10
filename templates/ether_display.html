@@ -62,6 +62,10 @@
              </script> -->
             <script type=text/javascript>
                 $("#inputEtherValue").keyup(function() {
+                    // don't cache ajax or content won't be fresh
+                    $.ajaxSetup ({
+                        cache: false
+                    });
                     var inputValue = $(this).val();
                     $(function() {
                         $('#inputEtherValue').on('change', function() {
@@ -70,10 +74,11 @@
                             }, function(data) {
                                 var finalValue = "= " + data.result + " $USD"
                                 $("#Convertedresult").text(finalValue);
+                                $("#inputEtherValue").load(url_for('convertUSD'))
                             });
-                            return false;
-                        });
-                    });
+                            return false;                            
+                        });                        
+                    });                   
                 });
             </script>
         </div>
