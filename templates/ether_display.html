@@ -63,22 +63,23 @@
             <script type=text/javascript>
                 $("#inputEtherValue").keyup(function() {
                     // don't cache ajax or content won't be fresh
-                    $.ajaxSetup ({
+                    $.ajaxSetup({
                         cache: false
                     });
-                    var inputValue = $(this).val();
                     $(function() {
                         $('#inputEtherValue').on('change', function() {
-                            $.getJSON('/convertUSD', {
-                                inputEtherValue: inputValue
-                            }, function(data) {
-                                var finalValue = "= " + data.result + " $USD"
-                                $("#Convertedresult").text(finalValue);
-                                $("#inputEtherValue").load(url_for('convertUSD'))
-                            });
-                            return false;                            
-                        });                        
-                    });                   
+                            var inputValue = $(this).val();
+                            $.getJSON("{{ url_for('convertUSD') }}", {
+                                    inputEtherValue: inputValue
+                                },
+                                function(data) {
+                                    var finalValue = "= " + data.result + " $USD"
+                                    $("#Convertedresult").text(finalValue);
+                                    $("#inputEtherValue").load(url_for('convertUSD'));
+                                });
+                            return false;
+                        });
+                    });
                 });
             </script>
         </div>

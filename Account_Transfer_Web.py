@@ -231,29 +231,13 @@ def convertUSD():
     if "".__eq__(convertedValue):
         return jsonify({'result': 0})    
     else:
-        return jsonify({'result': toTransUSD(convertedValue)})    
+        return jsonify({'result': toTransUSD(convertedValue)})      
 
-    # if request.method == "GET":
-    #     data = request.get_json()
-    #     print(data['inputEtherValue'])
-    #     return render_template('output.html', data=data)
-
-    # if request.form.get('inputEtherValue') == 'success':        
-    #     print(request.args.get('inputEtherValue', 0, type=int))
-    #     return jsonify({'convertedValue': 'successfuly registered'})
-    # return jsonify({'convertedErrorValue': 'registration unsuccessful'})
-
-    # usdAmount = request.form.get('inputEtherValue', type=int)
-    # print(usdAmount)
-    # dynamicConvertUSD(toTransUSD(usdAmount))    
-    
-
-    # return json.dumps({'usd_amount': dynamicConvertUSD(usdAmount)})        
-    # return str(usdAmount)    
     # https://www.tutorialsteacher.com/jquery/jquery-get-method
     # https://stackoverflow.com/questions/16598213/how-to-bind-events-on-ajax-loaded-content
     # https://nishitvmaheta.medium.com/how-to-bind-events-on-ajax-loaded-content-using-jquery-eae4162d72e7
     # https://www.sitepoint.com/community/t/refresh-div-content-without-reloading-page/5353/22
+    # https://stackoverflow.com/questions/42355298/submit-ajax-post-onchange/42355528
         
     
 @app.route('/progress')
