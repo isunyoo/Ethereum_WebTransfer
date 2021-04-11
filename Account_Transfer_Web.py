@@ -174,7 +174,7 @@ def sendWebEther(reci_addr, donor_addr, amounts):
 # Function of Tx results data 
 def txResultData(tx_result):
     if(tx_result[0] == 1):              
-        message = Markup(f'The transaction was successful.<br>Transaction Number: {tx_result[1]}<br>From: {tx_result[2]}<br>To: {tx_result[3]}<br>Transaction Amount: {tx_result[4]} Wei = {tx_result[5]} ETH = {tx_result[6]} $USD<br>GasPrice: {tx_result[7]} Wei = {tx_result[8]} ETH<br>GasUsed: {tx_result[9]}') 
+        message = Markup(f'The transaction was successful for receipts.<br>Transaction Number: {tx_result[1]}<br>From: {tx_result[2]}<br>To: {tx_result[3]}<br>Transaction Amount: {tx_result[4]} Wei = {tx_result[5]} ETH = {tx_result[6]} $USD<br>GasPrice: {tx_result[7]} Wei = {tx_result[8]} ETH<br>GasUsed: {tx_result[9]}') 
         flash(message, 'results') 
     else:
         message = "The transaction was failed and reverted by EVM."
@@ -212,34 +212,27 @@ def selectRecipientInput():
     global _global_principal_address, _global_recipient_address    
     _global_recipient_address = request.form['recipient']    
     # print("Selected Recipient Data :", recipientAddress)        
-    accountImageCreation(_global_recipient_address)    
-    # dynamicConvertUSD(0.001)
+    accountImageCreation(_global_recipient_address)        
     return render_template('ether_display.html', value0=_global_principal_address, value1=_global_recipient_address)
 
 @app.route('/transferEther', methods=['POST'])        
 def etherTransaction():        
     global _global_principal_address, _global_recipient_address        
     etherAmount = request.form['inputEtherValue']
-    txResultData(sendWebEther(_global_recipient_address, _global_principal_address, etherAmount))       
-    # print("Selected Recipient Data :", recipientAddress)    
-    # return render_template('ether_display.html', value0=principalAddress, value1=recipientAddress)
+    txResultData(sendWebEther(_global_recipient_address, _global_principal_address, etherAmount))           
     return redirect(url_for('index'))
 
 @app.route('/convertUSD', methods=['GET'])
 def convertUSD():                    
-    convertedValue = request.args.get('inputEtherValue')       
-    if "".__eq__(convertedValue):
+    convertedValue = request.args.get('inputEtherValue') 
+    try:             
+        if "".__eq__(convertedValue):
+            return jsonify({'result': 0})    
+        else:
+            return jsonify({'result': toTransUSD(convertedValue)})      
+    except ValueError:
         return jsonify({'result': 0})    
-    else:
-        return jsonify({'result': toTransUSD(convertedValue)})      
 
-    # https://www.tutorialsteacher.com/jquery/jquery-get-method
-    # https://stackoverflow.com/questions/16598213/how-to-bind-events-on-ajax-loaded-content
-    # https://nishitvmaheta.medium.com/how-to-bind-events-on-ajax-loaded-content-using-jquery-eae4162d72e7
-    # https://www.sitepoint.com/community/t/refresh-div-content-without-reloading-page/5353/22
-    # https://stackoverflow.com/questions/42355298/submit-ajax-post-onchange/42355528
-        
-    
 @app.route('/progress')
 def progress():
     def generate():

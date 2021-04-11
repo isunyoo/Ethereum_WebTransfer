@@ -41,33 +41,14 @@
             <label for="inputValue"><h2>Enter your amounts of ethererum(ETH) to send: </h2></label>
             <textarea name="inputEtherValue" id="inputEtherValue" placeholder="Amount of ethererum(ETH)" class="form-control" style="width: auto;">{{ request.form['inputEtherValue'] }}</textarea>
             <span id=Convertedresult></span>
-            <!-- <script type=text/javascript>
-                $("#inputEtherValue").keyup(function() {
-                    var value = $(this).val();
-                    $.ajax({
-                        // url: '/convertUSD',
-                        url: "{{ url_for('convertUSD') }}",
-                        type: 'get',
-                        data: value,
-                        success: function(response) {
-                            // $("#convert_usd_currency").html(response);
-                            alert(response);                            
-                            // console.log(response.convertedValue);
-                        },
-                        error: function(error) {
-                            console.log(error.convertedErrorValue);
-                        }
-                    });                    
-                });
-             </script> -->
             <script type=text/javascript>
-                $("#inputEtherValue").keyup(function() {
+                $("#inputEtherValue").keydown(function() {
                     // don't cache ajax or content won't be fresh
                     $.ajaxSetup({
                         cache: false
                     });
                     $(function() {
-                        $('#inputEtherValue').on('change', function() {
+                        $('#inputEtherValue').on('change keyup paste', function() {
                             var inputValue = $(this).val();
                             $.getJSON("{{ url_for('convertUSD') }}", {
                                     inputEtherValue: inputValue
@@ -96,3 +77,6 @@
 </body>
 
 </html>
+
+<!-- https://stackoverflow.com/questions/14638575/hide-the-div-with-the-form-after-the-form-is-submitted-and-show-a-hidden-div -->
+<!-- https://stackoverflow.com/questions/17989313/display-a-hidden-div-after-a-form-submit-action -->
