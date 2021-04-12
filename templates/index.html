@@ -5,8 +5,8 @@
     <meta charset="UTF-8">
     <title>Ethereum Transfer Web</title>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>	
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 </head>
 
 <body>
@@ -20,7 +20,7 @@
         }
     </script>
     <h3>Welcome to Ether Transfer Principle Web</h3>
-    <h1>Select your principle address[#]</h1>
+    <h1>Select your principle address[#] for TransferEther</h1>
     <form name="selectForm" action="/selectPrincipalData" method="post" onsubmit="return checkSelect()">
         {% for i in range(value1): %}
         <p>
@@ -28,8 +28,7 @@
         </p>
         {% endfor %}
         <p><input type=submit value=Select></p>
-        <br>
-        {% for message in get_flashed_messages(category_filter=['results']) %}
+        <br> {% for message in get_flashed_messages(category_filter=['results']) %}
         <p>{{ message }}</p> {% endfor %}
     </form>
 </body>
