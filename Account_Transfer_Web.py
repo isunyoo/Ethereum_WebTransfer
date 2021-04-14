@@ -182,8 +182,8 @@ def txResultData(tx_result):
 
 
 # Connection Verification
-# print("Established_Connections :", web3.isConnected())
-# print("Current_Block # :", web3.eth.blockNumber, "\n")
+print("Established_Connections :", web3.isConnected())
+print("Current_Block # :", web3.eth.blockNumber, "\n")
 
 # Flask http web display
 app = Flask(__name__)
@@ -198,6 +198,16 @@ def index():
     return render_template('index.html', value0=account_name, value1=dataLen)    
         
 @app.route('/selectPrincipalData', methods=['POST'])
+def selectPrincipalInput():
+    global _global_principal_address    
+    _global_principal_address = request.form['principle']
+    # print(extractPrincipalCipher(principalAddress))    
+    accountImageCreation(_global_principal_address)
+    recipientLists = listAccounts()    
+    dataLen = len(recipientLists[0])                    
+    return render_template('recipient_display.html', value0=_global_principal_address, value1=recipientLists, value2=dataLen)
+
+@app.route('/queryPrincipalData', methods=['POST'])
 def selectPrincipalInput():
     global _global_principal_address    
     _global_principal_address = request.form['principle']
