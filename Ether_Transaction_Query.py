@@ -48,8 +48,8 @@ def queryEther(query_file, start_block, end_block, account_address):
 
             if to_matches or from_matches:
                 # print('Found transaction with hash %s'%tx['hash'].hex())
-                # ofile.write(tx_to_json(tx)+'\n')
-                ofile.write(tx_to_json(tx)+',')
+                ofile.write(tx_to_json(tx)+'\n')
+                # ofile.write(tx_to_json(tx)+',')
                 ofile.flush()
     
     return ofile.name

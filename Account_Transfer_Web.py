@@ -1,6 +1,5 @@
 from web3 import Web3
 from web3.auto import w3
-from json2html import *
 from decouple import config
 import Pydenticon_Generator as icon
 import Ether_Transaction_Query as etherQuery
@@ -114,7 +113,7 @@ def extractPrincipalCipher(principalAddress):
             sf.close()
         with open(single_file, 'r') as keyfile: 
             _encrypted_key = keyfile.read()                         
-            _local_principal_addresses_cipher.insert(idx, binascii.b2a_hex(w3.eth.account.decrypt(_encrypted_key, ACCOUNT_KEY)).decode('ascii'))                        
+            _local_principal_addresses_cipher.insert(idx, binascii.b2a_hex(w3.eth.account.decrypt(_encrypted_key, ACCOUNT_KEY)).decode('ascii')) 
             keyfile.close()
         if(str(principalAddress) == str(_local_principal_addresses[idx])): _principal_addresses_cipher = _local_principal_addresses_cipher[idx]            
         
@@ -186,7 +185,6 @@ def txResultData(tx_result):
 # print("Established_Connections :", web3.isConnected())
 # print("Current_Block # :", web3.eth.blockNumber, "\n")
 
-
 # Flask http web display
 app = Flask(__name__)
 app.config['FLASK_ENV'] = 'development'
@@ -216,15 +214,18 @@ def queryPrincipalInput():
     _global_principal_address = request.form['principle']    
     accountImageCreation(_global_principal_address)    
     start_block = int(request.form['fromBlk'])
-    end_block = int(request.form['toBlk'])    
-    # print(etherQuery.queryEther(_global_principal_address, start_block, end_block, _global_principal_address))
-    # print(type(etherQuery.queryEther(_global_principal_address, start_block, end_block, _global_principal_address)))
+    end_block = int(request.form['toBlk'])        
+    # with open(etherQuery.queryEther(_global_principal_address, start_block, end_block, _global_principal_address), 'r') as dataContent:        
+    #         json_file = json.load(dataContent)                                             
+    #         print(json_file["hash"])
+    #         dataContent.close()
     data = open(etherQuery.queryEther(_global_principal_address, start_block, end_block, _global_principal_address),'r')
     jsonFile = data.read()    
-    print(jsonFile)
-    queryOutput = json2html.convert(json = json.loads(jsonFile))
-    return render_template('query_display.html', value0=_global_principal_address, value1=start_block, value2=end_block, value3=queryOutput)
-
+    print(jsonFile[0]['hash'])
+    # queryOutput = json2html.convert(json = json.loads(jsonFile))
+    # return render_template('query_display.html', value0=_global_principal_address, value1=start_block, value2=end_block, value3=queryOutput)
+    return render_template('query_display.html', value0=_global_principal_address, value1=start_block, value2=end_block)
+    
 @app.route('/sendEther', methods=['POST'])
 def selectRecipientInput():
     global _global_principal_address, _global_recipient_address    
