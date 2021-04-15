@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Ethereum Transfer Web</title>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>	
+</head>
+
+<body>    
+    <h3>Welcome to Ether Transaction History</h3>
+    <h1>Selected Principle Account Address: <img src="{{url_for('static', filename='images/'+value0+'.png')}}" align="middle" /> {{ value0 }} <img src="{{url_for('static', filename='images/'+value0+'_qrcode.png')}}" align="middle" /></h1>    
+    <h2>Transanction History of 'From' {{ value1 }} Blk# ~ 'To' {{value2 }} Blk#</h2>
+    <!-- <table style="width: 100%;" border="2" cellpadding="5">
+        <tbody>
+        <tr>            
+        <td>hash</td>
+        <td>nonce</td>
+        <td>blockHash</td>
+        <td>blockNumber</td>
+        <td>from</td>
+        <td>to</td>
+        <td>value</td>
+        </tr>    
+        </tbody>
+        </table> -->
+    <h2>{{ value3 }}</h2>
+    <a href="{{ url_for('index') }}">Go back to Main</a>
+</body>
+
+</html>

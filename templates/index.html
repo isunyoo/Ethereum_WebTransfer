@@ -14,13 +14,34 @@
         function checkSelect() {
             var selectx = document.forms["selectForm"]["principle"].value;
             if (isNaN(selectx) || selectx == "") {
-                alert("Please select your principle address[#]");
+                alert("Please select your principle address[#] to transfer Ether");
+                return false;
+            }            
+        }
+        function checkSelectQuery() {
+            var selectx = document.forms["queryForm"]["principle"].value;
+            var fromBlk = document.forms["queryForm"]["fromBlk"].value;
+            var toBlk = document.forms["queryForm"]["toBlk"].value;
+            if (isNaN(selectx) || selectx == "") {
+                alert("Please select your principle address[#] to query Transaction History");
+                return false;
+            }            
+            if (isNaN(fromBlk) || fromBlk == "") {
+                alert("Please input Block['from'] number to query Transaction History");
+                return false;
+            }
+            if (isNaN(toBlk) || toBlk == "") {
+                alert("Please input Block['to'] number to query Transaction History");
+                return false;
+            }
+            if (fromBlk >= toBlk) {
+                alert("Please check condition again to query Transaction History");
                 return false;
             }
         }
     </script>
     <h3>Welcome to Ether Transfer Principle Web</h3>
-    <h1>Select your principle address[#] for TransferEther</h1>
+    <h1>1.Select your principle address[#] for TransferEther</h1>
     <form name="selectForm" action="/selectPrincipalData" method="post" onsubmit="return checkSelect()">
         {% for i in range(value1): %}
         <p>
@@ -28,6 +49,18 @@
         </p>
         {% endfor %}
         <p><input type=submit value=Select></p>
+        <br> {% for message in get_flashed_messages(category_filter=['results']) %}
+        <p>{{ message }}</p> {% endfor %}
+    </form>
+    <h1>2.Select your principle address[#] for Transanction History</h1>
+    <form name="queryForm" action="/queryPrincipalData" method="post" onsubmit="return checkSelectQuery()">
+        {% for i in range(value1): %}
+        <p>
+            <input type="radio" name="principle" id="option" value={{value0[0][i]}}>{{[i+1]}} Account Address: {{ value0[0][i] }} , ETHER: {{ value0[1][i] }} = USD: {{ value0[2][i] }} <br>
+        </p>
+        {% endfor %}
+        <p>Current Block Number: {{ value2 }} </p> <p>Block['from'] <input type="text" name="fromBlk"> Block['to'] <input type="text" name="toBlk"></p>
+        <p><input type=submit value=Query></p>
         <br> {% for message in get_flashed_messages(category_filter=['results']) %}
         <p>{{ message }}</p> {% endfor %}
     </form>

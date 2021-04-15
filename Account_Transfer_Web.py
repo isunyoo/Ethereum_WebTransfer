@@ -1,7 +1,9 @@
 from web3 import Web3
 from web3.auto import w3
+from json2html import *
 from decouple import config
 import Pydenticon_Generator as icon
+import Ether_Transaction_Query as etherQuery
 import json, binascii, requests, glob, qrcode, time
 from flask import Flask, render_template, request, redirect, url_for, flash, Markup, Response, jsonify
 
@@ -14,7 +16,6 @@ ACCOUNT_KEY = config('KEY')
 API_URL = config('ETHSCAN_URL')
 
 # Global variables
-_global_decrypted_key = ''
 _global_principal_address = ''
 _global_recipient_address = ''
 _global_wallet_address_counts = 0
@@ -182,8 +183,9 @@ def txResultData(tx_result):
 
 
 # Connection Verification
-print("Established_Connections :", web3.isConnected())
-print("Current_Block # :", web3.eth.blockNumber, "\n")
+# print("Established_Connections :", web3.isConnected())
+# print("Current_Block # :", web3.eth.blockNumber, "\n")
+
 
 # Flask http web display
 app = Flask(__name__)
@@ -194,8 +196,9 @@ app.config['SECRET_KEY'] = '12345'
 def index():    
     account_name = extractAccounts()
     dataLen = len(account_name[0])    
+    current_block = web3.eth.blockNumber
     # print(account_name)        
-    return render_template('index.html', value0=account_name, value1=dataLen)    
+    return render_template('index.html', value0=account_name, value1=dataLen, value2=current_block)    
         
 @app.route('/selectPrincipalData', methods=['POST'])
 def selectPrincipalInput():
@@ -208,20 +211,25 @@ def selectPrincipalInput():
     return render_template('recipient_display.html', value0=_global_principal_address, value1=recipientLists, value2=dataLen)
 
 @app.route('/queryPrincipalData', methods=['POST'])
-def selectPrincipalInput():
+def queryPrincipalInput():
     global _global_principal_address    
-    _global_principal_address = request.form['principle']
-    # print(extractPrincipalCipher(principalAddress))    
-    accountImageCreation(_global_principal_address)
-    recipientLists = listAccounts()    
-    dataLen = len(recipientLists[0])                    
-    return render_template('recipient_display.html', value0=_global_principal_address, value1=recipientLists, value2=dataLen)
+    _global_principal_address = request.form['principle']    
+    accountImageCreation(_global_principal_address)    
+    start_block = int(request.form['fromBlk'])
+    end_block = int(request.form['toBlk'])    
+    # print(etherQuery.queryEther(_global_principal_address, start_block, end_block, _global_principal_address))
+    # print(type(etherQuery.queryEther(_global_principal_address, start_block, end_block, _global_principal_address)))
+    data = open(etherQuery.queryEther(_global_principal_address, start_block, end_block, _global_principal_address),'r')
+    jsonFile = data.read()    
+    print(jsonFile)
+    queryOutput = json2html.convert(json = json.loads(jsonFile))
+    return render_template('query_display.html', value0=_global_principal_address, value1=start_block, value2=end_block, value3=queryOutput)
 
 @app.route('/sendEther', methods=['POST'])
 def selectRecipientInput():
     global _global_principal_address, _global_recipient_address    
     _global_recipient_address = request.form['recipient']    
-    # print("Selected Recipient Data :", recipientAddress)        
+    # print("Selected Recipient Data :", recipientAddress)       
     accountImageCreation(_global_recipient_address)        
     return render_template('ether_display.html', value0=_global_principal_address, value1=_global_recipient_address)
 
