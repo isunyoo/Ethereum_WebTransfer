@@ -214,14 +214,12 @@ def queryPrincipalInput():
     _global_principal_address = request.form['principle']    
     accountImageCreation(_global_principal_address)    
     start_block = int(request.form['fromBlk'])
-    end_block = int(request.form['toBlk'])        
-    # with open(etherQuery.queryEther(_global_principal_address, start_block, end_block, _global_principal_address), 'r') as dataContent:        
-    #         json_file = json.load(dataContent)                                             
-    #         print(json_file["hash"])
-    #         dataContent.close()
-    data = open(etherQuery.queryEther(_global_principal_address, start_block, end_block, _global_principal_address),'r')
-    jsonFile = data.read()    
-    print(jsonFile[0]['hash'])
+    end_block = int(request.form['toBlk'])     
+    _hash_data = []   
+    with open(etherQuery.queryEther(_global_principal_address, start_block, end_block, _global_principal_address), 'r') as dataContent:        
+            json_file = json.load(dataContent)                                             
+            print(json_file[0]["hash"])
+            dataContent.close()    
     # queryOutput = json2html.convert(json = json.loads(jsonFile))
     # return render_template('query_display.html', value0=_global_principal_address, value1=start_block, value2=end_block, value3=queryOutput)
     return render_template('query_display.html', value0=_global_principal_address, value1=start_block, value2=end_block)

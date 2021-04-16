@@ -16,7 +16,7 @@ def tx_to_json(tx):
         else:
             result[key] = val
 
-    return json.dumps(result)
+    return json.dumps(result, indent = 14)
 
 
 def queryEther(query_file, start_block, end_block, account_address):      
@@ -28,6 +28,7 @@ def queryEther(query_file, start_block, end_block, account_address):
 
     address_lowercase = account_address.lower()
     ofile = open('static/query/'+query_file+'.json', 'w')    
+    ofile.write('[')
 
     for idx in range(start_block, end_block):
         # print('Fetching block %d, remaining: %d, progress: %d%%'%(
@@ -36,6 +37,7 @@ def queryEther(query_file, start_block, end_block, account_address):
         block = web3.eth.getBlock(idx, full_transactions=True)
 
         for tx in block.transactions:
+            
             if tx['to']:
                 to_matches = tx['to'].lower() == address_lowercase
             else:
@@ -47,9 +49,13 @@ def queryEther(query_file, start_block, end_block, account_address):
                 from_matches = False
 
             if to_matches or from_matches:
-                # print('Found transaction with hash %s'%tx['hash'].hex())
-                ofile.write(tx_to_json(tx)+'\n')
-                # ofile.write(tx_to_json(tx)+',')
+                # print('Found transaction with hash %s'%tx['hash'].hex())                                
+                ofile.write(tx_to_json(tx)+',')
+                # ofile.write(tx_to_json(tx)+'\n')                
                 ofile.flush()
+
+    ofile.write(']')    
     
     return ofile.name
+
+    # https://stackoverflow.com/questions/50119663/add-character-and-remove-the-last-comma-in-a-json-file
