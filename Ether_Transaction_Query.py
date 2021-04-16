@@ -1,5 +1,5 @@
 #!/usr/bin/python
-import web3, json, os, glob
+import web3, json, os, glob, yaml
 from web3 import Web3
 from hexbytes import HexBytes
 
@@ -16,7 +16,7 @@ def tx_to_json(tx):
         else:
             result[key] = val
 
-    return json.dumps(result, indent = 14)
+    return json.dumps(result, indent = 14, sort_keys=True)
 
 
 def queryEther(query_file, start_block, end_block, account_address):      
@@ -55,7 +55,12 @@ def queryEther(query_file, start_block, end_block, account_address):
                 ofile.flush()
 
     ofile.write(']')    
-    
-    return ofile.name
+    ofile.close()
 
-    # https://stackoverflow.com/questions/50119663/add-character-and-remove-the-last-comma-in-a-json-file
+    # Re-align JsonFile Format
+    data = yaml.safe_load(open(ofile.name))    
+    with open('static/query/'+query_file+'.json', 'w') as json_file:
+        json.dump(json.dumps(data), json_file)
+    json_file.close()
+            
+    return ofile.name
