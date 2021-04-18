@@ -6,15 +6,12 @@ import Ether_Transaction_Query as etherQuery
 import json, binascii, requests, glob, qrcode, time
 from flask import Flask, render_template, request, redirect, url_for, flash, Markup, Response, jsonify
 
-ganache_url = "http://127.0.0.1:8545"
-web3 = Web3(Web3.HTTPProvider(ganache_url))
-
+# Global variables
+NETWORK_HOME = config('NETWORK_NAME')
 KFILE_HOME = config('KEYFILE_HOME')
 ACCOUNT_FILE = config('KEY_FILE')
 ACCOUNT_KEY = config('KEY')
 API_URL = config('ETHSCAN_URL')
-
-# Global variables
 _global_principal_address = ''
 _global_recipient_address = ''
 _global_wallet_address_counts = 0
@@ -25,6 +22,12 @@ _global_wallet_balance_usd = []
 _recipient_wallet_addresses = []
 _recipient_wallet_balance_ether = []
 _recipient_wallet_balance_usd = []
+
+
+# Connection Verification
+web3 = Web3(Web3.HTTPProvider(NETWORK_HOME))
+# print("Established_Connections :", web3.isConnected())
+# print("Current_Block # :", web3.eth.blockNumber, "\n")
 
 
 # Get the current price of cryptocurrency conversion API URL
@@ -167,23 +170,52 @@ def sendWebEther(reci_addr, donor_addr, amounts):
     Gas_Fees_Wei = web3.eth.getTransaction(tx_hash)['gasPrice']
     Gas_Fees_Eth = '{:.8f}'.format(toEther(web3.eth.getTransaction(tx_hash)['gasPrice']))    
     Gas_Used = web3.eth.getTransactionReceipt(tx_hash)['gasUsed']    
+    Block_Number = web3.eth.getTransactionReceipt(tx_hash)['blockNumber']    
 
-    return Tx_Status, Tx_Num, Frome, To, Wei_Amount, Eth_Amount, Usd_Amount, Gas_Fees_Wei, Gas_Fees_Eth, Gas_Used
+    return Tx_Status, Tx_Num, Frome, To, Wei_Amount, Eth_Amount, Usd_Amount, Gas_Fees_Wei, Gas_Fees_Eth, Gas_Used, Block_Number
 
 
 # Function of Tx results data 
 def txResultData(tx_result):
     if(tx_result[0] == 1):              
-        message = Markup(f'The transaction was successful for receipts.<br>Transaction Number: {tx_result[1]}<br>From: {tx_result[2]}<br>To: {tx_result[3]}<br>Transaction Amount: {tx_result[4]} Wei = {tx_result[5]} ETH = {tx_result[6]} $USD<br>GasPrice: {tx_result[7]} Wei = {tx_result[8]} ETH<br>GasUsed: {tx_result[9]}') 
+        message = Markup(f'The transaction was successful for receipts.<br>Transaction Number: {tx_result[1]}<br>From: {tx_result[2]}<br>To: {tx_result[3]}<br>Transaction Amount: {tx_result[4]} Wei = {tx_result[5]} ETH = {tx_result[6]} $USD<br>GasPrice: {tx_result[7]} Wei = {tx_result[8]} ETH<br>GasUsed: {tx_result[9]}<br>Block Number: {tx_result[10]}') 
         flash(message, 'results') 
     else:
         message = "The transaction was failed and reverted by EVM."
         flash(message, 'results') 
 
 
-# Connection Verification
-# print("Established_Connections :", web3.isConnected())
-# print("Current_Block # :", web3.eth.blockNumber, "\n")
+# Function to Retrieve Tx results historical data
+def txResultHistoryData(query_file, start_block, end_block, principal_address):
+    # Local Lists variables 
+    _local_listLength = 0    
+    _local_From = []
+    _local_To = []
+    _local_EthValue = []
+    _local_USDValue = []
+    _local_Nonce = []
+    _local_BlockNumber = []
+    _local_Hash = []
+    _local_BlockHash = []            
+
+    # Reading from JSON file   
+    with open(etherQuery.queryEther(query_file, start_block, end_block, principal_address), 'r') as dataContent:        
+            loaded_json = json.load(dataContent)    
+
+            for idx, key in enumerate(loaded_json):                
+                _local_From.insert(idx, loaded_json[idx]['from']) 
+                _local_To.insert(idx, loaded_json[idx]['to'])
+                _local_EthValue.insert(idx, toEther(loaded_json[idx]['value']))
+                _local_USDValue.insert(idx, toUSD(loaded_json[idx]['value']))
+                _local_Nonce.insert(idx, loaded_json[idx]['nonce'])
+                _local_BlockNumber.insert(idx, loaded_json[idx]['blockNumber'])
+                _local_Hash.insert(idx, loaded_json[idx]['hash'])
+                _local_BlockHash.insert(idx, loaded_json[idx]['blockHash'])               
+            _local_listLength = len(_local_From)
+    dataContent.close()
+
+    return _local_listLength, _local_From, _local_To, _local_EthValue, _local_USDValue, _local_Nonce, _local_BlockNumber, _local_Hash, _local_BlockHash
+
 
 # Flask http web display
 app = Flask(__name__)
@@ -214,26 +246,9 @@ def queryPrincipalInput():
     _global_principal_address = request.form['principle']    
     accountImageCreation(_global_principal_address)    
     start_block = int(request.form['fromBlk'])
-    end_block = int(request.form['toBlk'])     
-    
-    with open(etherQuery.queryEther(_global_principal_address, start_block, end_block, _global_principal_address), 'r') as dataContent:        
-            loaded_json = json.load(dataContent)                                             
-            # print(json_file[0]["hash"])
-            # print(type(json_file))            
-            for x in loaded_json:
-                print("%s: %d" % (x, loaded_json[x]['hash']))                
-            dataContent.close()
-
-    # # JSON file
-    # f = open(etherQuery.queryEther(_global_principal_address, start_block, end_block, _global_principal_address), "r") 
-    # # Reading from file
-    # data = json.loads(f.read())    
-    # # print(data)
-    # print(type(data))
-   
-    
-    # return render_template('query_display.html', value0=_global_principal_address, value1=start_block, value2=end_block, value3=queryOutput)
-    return render_template('query_display.html', value0=_global_principal_address, value1=start_block, value2=end_block)
+    end_block = int(request.form['toBlk']) + 1
+    listLength, From, To, EthValue, USDValue, Nonce, BlockNumber, Hash, BlockHash = txResultHistoryData(_global_principal_address, start_block, end_block, _global_principal_address)           
+    return render_template('query_display.html', value0=_global_principal_address, value1=start_block, value2=end_block, value3=listLength, value4=From, value5=To, value6=EthValue, value7=USDValue, value8=Nonce, value9=BlockNumber, value10=Hash, value11=BlockHash)
     
 @app.route('/sendEther', methods=['POST'])
 def selectRecipientInput():

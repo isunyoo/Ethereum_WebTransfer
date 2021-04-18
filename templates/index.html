@@ -61,8 +61,7 @@
         {% endfor %}
         <p>Current Block Number: {{ value2 }} </p> <p>Block['from'] <input type="text" name="fromBlk"> Block['to'] <input type="text" name="toBlk"></p>
         <p><input type=submit value=Query></p>
-        <br> {% for message in get_flashed_messages(category_filter=['results']) %}
-        <p>{{ message }}</p> {% endfor %}
+        <br>
     </form>
 </body>
 
