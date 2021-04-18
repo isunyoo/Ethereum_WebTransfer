@@ -20,7 +20,7 @@ def tx_to_json(tx):
             result[key] = val    
     return json.dumps(result)
 
-
+# Function to Retrieve Tx results historical data as json file
 def queryEther(query_file, start_block, end_block, account_address):      
 
     # Delete all history transaction files

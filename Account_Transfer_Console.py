@@ -3,19 +3,22 @@ from web3 import Web3
 from web3.auto import w3
 from decouple import config
 
-ganache_url = "http://127.0.0.1:8545"
-web3 = Web3(Web3.HTTPProvider(ganache_url))
-
+# Global variables
+NETWORK_HOME = config('NETWORK_NAME')
 KFILE_HOME = config('KEYFILE_HOME')
 ACCOUNT_FILE = config('KEY_FILE')
 ACCOUNT_KEY = config('KEY')
 API_URL = config('ETHSCAN_URL')
-
-# Global variables
 _global_decrypted_key = ''
 _global_wallet_addresses = ''
 _global_principal_address = ''
 _global_wallet_address_counts = 0
+
+
+# Connection Verification
+web3 = Web3(Web3.HTTPProvider(NETWORK_HOME))
+# print("Established_Connections :", web3.isConnected())
+# print("Current_Block # :", web3.eth.blockNumber, "\n")
 
 
 # Get the current price of cryptocurrency conversion API URL
@@ -145,9 +148,6 @@ def sendEther(rec_num, donor_addr):
     print(web3.eth.getTransactionReceipt(tx_hash)['status']==1 and "The transaction was successful." or "The transaction was reverted by EVM.")
 
 
-# Connection Verification
-print("Established_Connections :", web3.isConnected())
-print("Current_Block # :", web3.eth.blockNumber, "\n")
 # List Accounts Info Display
 extractAccounts()
 selectPrincipalAccount()

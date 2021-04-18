@@ -1,8 +1,8 @@
 from web3 import Web3
 from web3.auto import w3
 from decouple import config
-import Pydenticon_Generator as icon
-import Ether_Transaction_Query as etherQuery
+import utils.Pydenticon_Generator as pyIcon
+import utils.Ether_Transaction_Query as etherQuery
 import json, binascii, requests, glob, qrcode, time
 from flask import Flask, render_template, request, redirect, url_for, flash, Markup, Response, jsonify
 
@@ -30,9 +30,9 @@ web3 = Web3(Web3.HTTPProvider(NETWORK_HOME))
 # print("Current_Block # :", web3.eth.blockNumber, "\n")
 
 
-# Get the current price of cryptocurrency conversion API URL
-req = requests.get(API_URL)
-USD_CURRENCY=json.loads(req.content)["USD"]
+# Get the current USD price of cryptocurrency conversion from API URL
+apiReq = requests.get(API_URL)
+USD_CURRENT_PRICE=json.loads(apiReq.content)["USD"]    
 
 
 # Function to return balances of ethereum
@@ -42,13 +42,13 @@ def toEther(balance):
 
 # Function to return USD conversion values
 def toUSD(balance):
-    usd_sum = round(USD_CURRENCY * float(toEther(balance)), 2)    
+    usd_sum = round(USD_CURRENT_PRICE * float(toEther(balance)), 2)    
     return usd_sum
 
 
 # Function to return Trans USD conversion values
 def toTransUSD(balance):
-    usd_trans_sum = USD_CURRENCY * float(balance)          
+    usd_trans_sum = USD_CURRENT_PRICE * float(balance)          
     return str(usd_trans_sum)[:str(usd_trans_sum).index(".") + 3] 
 
 
@@ -56,7 +56,7 @@ def toTransUSD(balance):
 def accountImageCreation(account_address):    
     # Identicon Setup the padding(top, bottom, left, right) in pixels.
     padding = (10, 10, 10, 10)
-    identicon_png = icon.generator.generate(account_address, 20, 20, padding=padding, output_format="png")
+    identicon_png = pyIcon.generator.generate(account_address, 20, 20, padding=padding, output_format="png")
     # Identicon can be easily saved to a file.
     f = open("static/images/%s.png" % (account_address), "wb")
     f.write(identicon_png)

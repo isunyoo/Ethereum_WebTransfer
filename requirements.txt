@@ -1,0 +1,8 @@
+Flask==1.1.2
+web3==5.17.0
+pydenticon==0.3.1
+requests==2.22.0
+hexbytes==0.2.1
+qrcode==6.1
+python-decouple==3.4
+PyYAML==5.4.1
