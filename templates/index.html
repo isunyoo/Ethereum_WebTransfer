@@ -16,8 +16,9 @@
             if (isNaN(selectx) || selectx == "") {
                 alert("Please select your principle address[#] to transfer Ether");
                 return false;
-            }            
+            }
         }
+
         function checkSelectQuery() {
             var selectx = document.forms["queryForm"]["principle"].value;
             var fromBlk = document.forms["queryForm"]["fromBlk"].value;
@@ -25,7 +26,7 @@
             if (isNaN(selectx) || selectx == "") {
                 alert("Please select your principle address[#] to query Transaction History");
                 return false;
-            }            
+            }
             if (isNaN(fromBlk) || fromBlk == "") {
                 alert("Please input Block['from'] number to query Transaction History");
                 return false;
@@ -36,6 +37,14 @@
             }
             if (fromBlk >= toBlk) {
                 alert("Please check condition again to query Transaction History");
+                return false;
+            }
+        }
+
+        function checkImport() {
+            var selectx = document.forms["importForm"]["inputPrivateKey"].value;
+            if (isNaN(selectx) || selectx == "") {
+                alert("Please Paste/Type Your Private Key");
                 return false;
             }
         }
@@ -59,8 +68,16 @@
             <input type="radio" name="principle" id="option" value={{value0[0][i]}}>{{[i+1]}} Account Address: {{ value0[0][i] }}, ETHER: {{ value0[1][i] }} = USD: {{ value0[2][i] }} <br>
         </p>
         {% endfor %}
-        <p>Current Block Number: {{ value2 }} </p> <p>Block['From'] <input type="text" name="fromBlk"> Block['To'] <input type="text" name="toBlk"></p>
+        <p>Current Block Number: {{ value2 }} </p>
+        <p>Block['From'] <input type="text" name="fromBlk"> Block['To'] <input type="text" name="toBlk"></p>
         <p><input type=submit value=Query></p>
+    </form>
+    <h1>3.Import Ethereum</h1>
+    <form name="importForm" action="/importPrivateKey" method="post" onsubmit="return checkImport()">
+        <textarea name="inputPrivateKey" id="inputPrivateKey" placeholder="Paste/Type Your Private Key" class="form-control" style="width: 30%;">{{ request.form['inputEtherValue'] }}</textarea>
+        <p><input type=submit value=Import>&nbsp&nbsp&nbsp
+            <label for="myKeyFile">Select a privatekey file: <input type="file" id="myKeyFile" name="myKeyFile"></label>
+        </p>
         <br>
     </form>
 </body>
