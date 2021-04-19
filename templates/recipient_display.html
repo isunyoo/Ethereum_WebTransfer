@@ -25,7 +25,7 @@
     <form name="selectForm" action="/sendEther" method="post" onsubmit="return checkSelect()">
         {% for i in range(value2): %}
         <p>
-            <input type="radio" name="recipient" id="option" value={{value1[0][i]}}>{{[i+1]}} Balance of {{ value1[0][i] }} , ETHER: {{ value1[1][i] }} = USD: {{ value1[2][i] }} <br>
+            <input type="radio" name="recipient" id="option" value={{value1[0][i]}}>{{[i+1]}} Balance of {{ value1[0][i] }}, ETHER: {{ value1[1][i] }} = USD: {{ value1[2][i] }} <br>
         </p>
         {% endfor %}
         <p><input type=submit value=Select></p>
