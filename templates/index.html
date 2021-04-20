@@ -58,7 +58,7 @@
         </p>
         {% endfor %}
         <p><input type=submit value=Select></p>
-        <br> {% for message in get_flashed_messages(category_filter=['results']) %}
+        <br> {% for message in get_flashed_messages(category_filter=['txResults']) %}
         <p>{{ message }}</p> {% endfor %}
     </form>
     <h1>2.Select your principle address[#] for Transanction History</h1>
@@ -78,7 +78,8 @@
         <p><input type=submit value=Import>&nbsp&nbsp&nbsp
             <label for="myKeyFile">Select a privatekey file: <input type="file" id="myKeyFile" name="myKeyFile"></label>
         </p>
-        <br>
+        <br> {% for message in get_flashed_messages(category_filter=['importResult']) %}
+        <p>{{ message }}</p> {% endfor %}
     </form>
 </body>
 

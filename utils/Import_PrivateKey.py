@@ -24,9 +24,3 @@ def importPrivateKey(private_key):
             subprocess.Popen(['geth', 'account', 'import', '--datadir', KEY_BASE, '--password', P_KEY, PRIVATE_KEY], text=True, stdout=subprocess.PIPE)
             i += 1 
 
-
-
-# ETHEREUM_HOME=/home/syoo/.ethereum
-# KEYSTORE_BASE=/home/syoo/.ethereum/development
-# KEYFILE_HOME=/home/syoo/.ethereum/development/keystore
-# PRIVATE_KEY_FILE=/home/syoo/.ethereum/development/temp_privatekey_import.json

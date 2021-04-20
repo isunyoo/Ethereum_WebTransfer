@@ -180,10 +180,20 @@ def sendWebEther(reci_addr, donor_addr, amounts):
 def txResultData(tx_result):
     if(tx_result[0] == 1):              
         message = Markup(f'The transaction was successful for receipts.<br>Transaction Number: {tx_result[1]}<br>From: {tx_result[2]}<br>To: {tx_result[3]}<br>Transaction Amount: {tx_result[4]} Wei = {tx_result[5]} ETH = {tx_result[6]} $USD<br>GasPrice: {tx_result[7]} Wei = {tx_result[8]} ETH<br>GasUsed: {tx_result[9]}<br>Block Number: {tx_result[10]}') 
-        flash(message, 'results') 
+        flash(message, 'txResults') 
     else:
         message = "The transaction was failed and reverted by EVM."
-        flash(message, 'results') 
+        flash(message, 'txResults') 
+
+
+# Function of PrivateKey import result
+def importResultData(tx_result):
+    if(tx_result[0] == 1):              
+        message = Markup(f'The transaction was successful for receipts.<br>Transaction Number: {tx_result[1]}<br>From: {tx_result[2]}<br>To: {tx_result[3]}<br>Transaction Amount: {tx_result[4]} Wei = {tx_result[5]} ETH = {tx_result[6]} $USD<br>GasPrice: {tx_result[7]} Wei = {tx_result[8]} ETH<br>GasUsed: {tx_result[9]}<br>Block Number: {tx_result[10]}') 
+        flash(message, 'importResult') 
+    else:
+        message = "The transaction was failed and reverted by EVM."
+        flash(message, 'importResult') 
 
 
 # Function to Retrieve Tx results historical data
@@ -254,7 +264,7 @@ def queryPrincipalInput():
 @app.route('/importPrivateKey', methods=['POST'])
 def importPrivateKeyInput():    
     privateKeyValue = request.form['inputPrivateKey']
-    imPri.importPrivateKey(privateKeyValue)
+    importResultData(imPri.importPrivateKey(privateKeyValue))
     return redirect(url_for('index'))
     
 @app.route('/sendEther', methods=['POST'])
