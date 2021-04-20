@@ -1,6 +1,7 @@
 from web3 import Web3
 from web3.auto import w3
 from decouple import config
+import utils.Import_PrivateKey as imPri
 import utils.Pydenticon_Generator as pyIcon
 import utils.Ether_Transaction_Query as etherQuery
 import json, binascii, requests, glob, qrcode, time
@@ -251,19 +252,11 @@ def queryPrincipalInput():
     return render_template('query_display.html', value0=_global_principal_address, value1=start_block, value2=end_block, value3=listLength, value4=From, value5=To, value6=EthValue, value7=USDValue, value8=Nonce, value9=BlockNumber, value10=Hash, value11=BlockHash)
 
 @app.route('/importPrivateKey', methods=['POST'])
-def importPrivateKeyInput():
-    # $ geth account list --keystore /home/syoo/.ethereum/keystore
-    # $ geth account import --datadir /home/syoo/.ethereum ./key.prv   (key.prv from metamask private_key)
-    # Address: {8448744a53013a0ae87bf321d955eeb92c5bf6e4}
-    # $ geth account import --datadir /home/syoo/.ethereum/ --password ./passwordfile ./key.prv
-    global _global_principal_address    
-    _global_principal_address = request.form['principle']    
-    accountImageCreation(_global_principal_address)    
-    start_block = int(request.form['fromBlk'])
-    end_block = int(request.form['toBlk']) + 1
-    listLength, From, To, EthValue, USDValue, Nonce, BlockNumber, Hash, BlockHash = txResultHistoryData(_global_principal_address, start_block, end_block, _global_principal_address)           
-    return render_template('query_display.html', value0=_global_principal_address, value1=start_block, value2=end_block, value3=listLength, value4=From, value5=To, value6=EthValue, value7=USDValue, value8=Nonce, value9=BlockNumber, value10=Hash, value11=BlockHash)
-
+def importPrivateKeyInput():    
+    privateKeyValue = request.form['inputPrivateKey']
+    imPri.importPrivateKey(privateKeyValue)
+    return redirect(url_for('index'))
+    
 @app.route('/sendEther', methods=['POST'])
 def selectRecipientInput():
     global _global_principal_address, _global_recipient_address    

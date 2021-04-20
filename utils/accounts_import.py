@@ -18,6 +18,7 @@ MNEMONIC_STRING = config('MNEMONIC')
 # Connection Verification
 web3 = Web3(Web3.HTTPProvider(NETWORK_HOME))
 
+
 # Function to return balances of ethereum
 def toEther(balance):    
     return web3.fromWei(balance, 'ether')
