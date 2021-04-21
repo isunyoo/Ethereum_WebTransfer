@@ -187,12 +187,12 @@ def txResultData(tx_result):
 
 
 # Function of PrivateKey import result
-def importResultData(tx_result):
-    if(tx_result[0] == 1):              
-        message = Markup(f'The transaction was successful for receipts.<br>Transaction Number: {tx_result[1]}<br>From: {tx_result[2]}<br>To: {tx_result[3]}<br>Transaction Amount: {tx_result[4]} Wei = {tx_result[5]} ETH = {tx_result[6]} $USD<br>GasPrice: {tx_result[7]} Wei = {tx_result[8]} ETH<br>GasUsed: {tx_result[9]}<br>Block Number: {tx_result[10]}') 
-        flash(message, 'importResult') 
+def importResultData(import_result):
+    if(import_result == 0):              
+        message = Markup(f'A private key has imported successfully.<br>Account Address: {import_result}<br>') 
+        flash(message, 'importResult')
     else:
-        message = "The transaction was failed and reverted by EVM."
+        message = "Unable to import a private key. Please check and try again."
         flash(message, 'importResult') 
 
 

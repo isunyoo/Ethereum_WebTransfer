@@ -43,7 +43,7 @@
 
         function checkImport() {
             var selectx = document.forms["importForm"]["inputPrivateKey"].value;
-            if (isNaN(selectx) || selectx == "") {
+            if (selectx == "") {
                 alert("Please Paste/Type Your Private Key");
                 return false;
             }
@@ -74,12 +74,13 @@
     </form>
     <h1>3.Import Ethereum</h1>
     <form name="importForm" action="/importPrivateKey" method="post" onsubmit="return checkImport()">
-        <textarea name="inputPrivateKey" id="inputPrivateKey" placeholder="Paste/Type Your Private Key" class="form-control" style="width: 30%;">{{ request.form['inputEtherValue'] }}</textarea>
+        <textarea name="inputPrivateKey" id="inputPrivateKey" placeholder="Paste/Type Your Private Key" class="form-control" style="width: 40%;">{{ request.form['inputEtherValue'] }}</textarea>
         <p><input type=submit value=Import>&nbsp&nbsp&nbsp
             <label for="myKeyFile">Select a privatekey file: <input type="file" id="myKeyFile" name="myKeyFile"></label>
         </p>
-        <br> {% for message in get_flashed_messages(category_filter=['importResult']) %}
+        {% for message in get_flashed_messages(category_filter=['importResult']) %}
         <p>{{ message }}</p> {% endfor %}
+        <br>
     </form>
 </body>
 
