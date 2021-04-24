@@ -8,9 +8,9 @@ KEY_BASE = config('KEYSTORE_BASE')
 PRIVATE_KEY = config('PRIVATE_KEY_FILE')
 
 # Function to attach account in ETHEREUM_HOME
-def importPrivateKey(private_key):             
-    with open(PRIVATE_KEY, 'w') as outfile:
-        json.dump(private_key, outfile)
+def importPrivateKey(private_key):        
+    with open(PRIVATE_KEY, 'w') as outfile:        
+        outfile.write(json.dumps(private_key).replace('"', ''))    
         status = subprocess.Popen(['geth', 'account', 'import', '--datadir', KEY_BASE, '--password', P_KEY, PRIVATE_KEY], text=True, stdout=subprocess.PIPE)        
         status.communicate()
     return status.returncode

@@ -264,6 +264,7 @@ def queryPrincipalInput():
 @app.route('/importPrivateKey', methods=['POST'])
 def importPrivateKeyInput():    
     privateKeyValue = request.form['inputPrivateKey']
+    print('ImportResult', imPri.importPrivateKey(privateKeyValue))
     importResultData(imPri.importPrivateKey(privateKeyValue))
     return redirect(url_for('index'))
     
