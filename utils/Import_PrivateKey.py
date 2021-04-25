@@ -15,9 +15,10 @@ def importPrivateKey(private_key):
     pfile.close()    
 
     # PrivateKey file
-    with open(PRIVATE_KEY, 'w') as outfile:        
-        outfile.write(json.dumps(private_key).replace('"', ''))    
-        status = subprocess.Popen(['geth', 'account', 'import', '--datadir', KEY_BASE, '--password', pfile.name, PRIVATE_KEY], text=True, stdout=subprocess.PIPE)        
+    with open(PRIVATE_KEY, 'w') as outfile:          
+        outfile.write(json.dumps(private_key).replace('"', '')) 
+        outfile.close()                 
+        status = subprocess.Popen(['geth', 'account', 'import', '--datadir', KEY_BASE, '--password', pfile.name, outfile.name], text=True, stdout=subprocess.PIPE)
         status.communicate()
 
     # Delete all Key files        

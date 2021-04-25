@@ -188,8 +188,9 @@ def txResultData(tx_result):
 
 # Function of PrivateKey import result
 def importResultData(import_result):
-    if(import_result == 0):              
-        message = Markup(f'A private key has imported successfully.<br>Account Address: {import_result}<br>') 
+    # print('ImportResult: ', import_result)
+    if(import_result == 0):     
+        message = Markup(f'A private key has imported successfully. Imported Account Address: {import_result}<br>') 
         flash(message, 'importResult')
     else:
         message = "Unable to import a private key. Please check and try again."
@@ -263,8 +264,7 @@ def queryPrincipalInput():
 
 @app.route('/importPrivateKey', methods=['POST'])
 def importPrivateKeyInput():    
-    privateKeyValue = request.form['inputPrivateKey']
-    print('ImportResult', imPri.importPrivateKey(privateKeyValue))
+    privateKeyValue = request.form['inputPrivateKey']    
     importResultData(imPri.importPrivateKey(privateKeyValue))
     return redirect(url_for('index'))
     
