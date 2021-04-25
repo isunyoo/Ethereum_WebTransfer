@@ -58,7 +58,7 @@
         </p>
         {% endfor %}
         <p><input type=submit value=Select></p>
-        <br> {% for message in get_flashed_messages(category_filter=['txResults']) %}
+        {% for message in get_flashed_messages(category_filter=['txResults']) %}
         <p>{{ message }}</p> {% endfor %}
     </form>
     <h1>2.Select your principle address[#] for Transanction History</h1>
