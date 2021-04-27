@@ -1,11 +1,12 @@
 from web3 import Web3
 from web3.auto import w3
 from decouple import config
+from werkzeug.utils import secure_filename
 import utils.Import_PrivateKey as imPri
 import utils.Pydenticon_Generator as pyIcon
 import utils.Ether_Transaction_Query as etherQuery
-import json, binascii, requests, glob, qrcode, time
-from flask import Flask, render_template, request, redirect, url_for, flash, Markup, Response, jsonify
+import json, binascii, requests, glob, qrcode, time, os
+from flask import Flask, render_template, request, redirect, url_for, flash, Markup, Response, jsonify, abort
 
 # Global variables
 NETWORK_HOME = config('NETWORK_NAME')
@@ -186,14 +187,13 @@ def txResultData(tx_result):
         flash(message, 'txResults') 
 
 
-# Function of PrivateKey import result
-def importResultData(import_result):
-    # print('ImportResult: ', import_result)
-    if(import_result == 0):     
-        message = Markup(f'A private key has imported successfully. Imported Account Address: {import_result}<br>') 
+# Function of PrivateKey import result display
+def importResultData(import_result_code, import_result_stdout):    
+    if(import_result_code == 0):     
+        message = Markup(f'A private key has imported successfully.<br> {import_result_stdout}<br>') 
         flash(message, 'importResult')
-    else:
-        message = "Unable to import a private key. Please check and try again."
+    else:        
+        message = Markup(f'{import_result_stdout}<br> Unable to import a private key. Please check and try again.<br>')
         flash(message, 'importResult') 
 
 
@@ -264,8 +264,21 @@ def queryPrincipalInput():
 
 @app.route('/importPrivateKey', methods=['POST'])
 def importPrivateKeyInput():    
-    privateKeyValue = request.form['inputPrivateKey']    
-    importResultData(imPri.importPrivateKey(privateKeyValue))
+    privateKeyValue = request.form['inputPrivateKey']        
+    returncode, stdout = imPri.importPrivateKey(privateKeyValue) 
+    importResultData(returncode, stdout)
+    return redirect(url_for('index'))
+
+@app.route('/uploaderPrivateKey', methods=['POST'])
+def uploaderPrivateKeyInput():    
+    uploaded_file = request.files['myKeyFile']
+    filename = secure_filename(uploaded_file.filename)
+    if filename != '':
+        # file_ext = os.path.splitext(filename)[1]
+        # if file_ext not in app.config['UPLOAD_EXTENSIONS']:
+        #     abort(400)
+        KEY_BASE = config('KEYSTORE_BASE')
+        uploaded_file.save(os.path.join(KEY_BASE+'/temp/', filename))    
     return redirect(url_for('index'))
     
 @app.route('/sendEther', methods=['POST'])

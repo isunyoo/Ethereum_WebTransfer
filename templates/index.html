@@ -48,6 +48,14 @@
                 return false;
             }
         }
+        
+        function checkUploader() {
+            var selectx = document.forms["uploadForm"]["myKeyFile"].value;
+            if (selectx == "") {
+                alert("Please select a privatekey file to upload");
+                return false;
+            }
+        }
     </script>
     <h3>Welcome to Ether Transfer Principle Web</h3>
     <h1>1.Select your principle address[#] for TransferEther</h1>
@@ -75,13 +83,14 @@
     <h1>3.Import Ethereum</h1>
     <form name="importForm" action="/importPrivateKey" method="post" onsubmit="return checkImport()">
         <textarea name="inputPrivateKey" id="inputPrivateKey" placeholder="Paste/Type Your Private Key" class="form-control" style="width: 40%;">{{ request.form['inputEtherValue'] }}</textarea>
-        <p><input type=submit value=Import>&nbsp&nbsp&nbsp
-            <label for="myKeyFile">Select a privatekey file: <input type="file" id="myKeyFile" name="myKeyFile"></label>
-        </p>
-        {% for message in get_flashed_messages(category_filter=['importResult']) %}
-        <p>{{ message }}</p> {% endfor %}
-        <br>
+        <p><input type=submit value=Import>&nbsp&nbsp&nbsp</p>
     </form>
+    <form name="uploadForm" action="/uploaderPrivateKey" method="POST" enctype="multipart/form-data" onsubmit="return checkUploader()">
+        <label for="myKeyFile">Select a privatekey file to import: <input type="file" id="myKeyFile" name="myKeyFile"><input type="submit" value="Upload and Import"></label>             
+    </form>
+    {% for message in get_flashed_messages(category_filter=['importResult']) %}
+    <p>{{ message }}</p> {% endfor %}
+    <br>
 </body>
 
 </html>
