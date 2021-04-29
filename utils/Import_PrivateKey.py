@@ -9,7 +9,10 @@ from flask import abort
 P_KEY = config('KEY')
 KEY_BASE = config('KEYSTORE_BASE')
 PRIVATE_KEY = config('PRIVATE_KEY_FILE')
-
+UPLOAD_FOLDER = config('UPLOAD_FOLDER')
+ALLOWED_EXTENSIONS = config('ALLOWED_EXTENSIONS')
+# Limit the maximum allowed payload to 3 megabytes. 
+MAX_CONTENT_LENGTH = config('MAX_CONTENT_LENGTH')
 
 # Function to attach account in ETHEREUM_HOME
 def importPrivateKey(private_key): 
@@ -21,7 +24,8 @@ def importPrivateKey(private_key):
     # PrivateKey file
     with open(PRIVATE_KEY, 'w') as outfile:          
         outfile.write(json.dumps(private_key).replace('"', '')) 
-        outfile.close()                                 
+        outfile.close()                     
+        # Run External Shell Programs for geth command    
         status = subprocess.run(['geth', 'account', 'import', '--datadir', KEY_BASE, '--password', pfile.name, outfile.name], text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE) 
 
     # Delete all Key files        
@@ -51,7 +55,8 @@ def uploadPrivateKey(privatekey_file):
     
         # Read PrivateKey file
         ufile = open(KEY_BASE+'/temp/'+filename, 'r')    
-        ufile.close()                                
+        ufile.close()                              
+        # Run External Shell Programs for geth command
         status = subprocess.run(['geth', 'account', 'import', '--datadir', KEY_BASE, '--password', pfile.name, ufile.name], text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE) 
 
         # Delete all Key files        
@@ -60,3 +65,11 @@ def uploadPrivateKey(privatekey_file):
             os.remove(f)
 
         return status.returncode, status.stdout
+
+
+# https://flask.palletsprojects.com/en/1.1.x/patterns/fileuploads/
+# https://www.programcreek.com/python/example/96284/werkzeug.utils.secure_filename
+
+# UPLOAD_FOLDER = /home/syoo/.ethereum/temp
+# ALLOWED_EXTENSIONS = {'txt', 'doc', 'docx'}
+# MAX_CONTENT_LENGTH = 3*1024*1024 
