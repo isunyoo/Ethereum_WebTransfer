@@ -11,8 +11,13 @@ KEY_BASE = config('KEYSTORE_BASE')
 PRIVATE_KEY = config('PRIVATE_KEY_FILE')
 UPLOAD_FOLDER = config('UPLOAD_FOLDER')
 ALLOWED_EXTENSIONS = config('ALLOWED_EXTENSIONS')
-# Limit the maximum allowed payload to 3 megabytes. 
+# Limit the maximum allowed payload to 3 megabytes
+MAX_CONTENT_LENGTH = 3*1024*1024 
 MAX_CONTENT_LENGTH = config('MAX_CONTENT_LENGTH')
+# Set of allowed file extensions
+ALLOWED_EXTENSIONS = {'txt', 'doc', 'docx'}
+config['ALLOWED_EXTENSIONS'] = ALLOWED_EXTENSIONS
+
 
 # Function to attach account in ETHEREUM_HOME
 def importPrivateKey(private_key): 
@@ -70,6 +75,3 @@ def uploadPrivateKey(privatekey_file):
 # https://flask.palletsprojects.com/en/1.1.x/patterns/fileuploads/
 # https://www.programcreek.com/python/example/96284/werkzeug.utils.secure_filename
 
-# UPLOAD_FOLDER = /home/syoo/.ethereum/temp
-# ALLOWED_EXTENSIONS = {'txt', 'doc', 'docx'}
-# MAX_CONTENT_LENGTH = 3*1024*1024 
