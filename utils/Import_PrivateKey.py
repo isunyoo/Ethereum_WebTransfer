@@ -9,14 +9,8 @@ from flask import abort
 P_KEY = config('KEY')
 KEY_BASE = config('KEYSTORE_BASE')
 PRIVATE_KEY = config('PRIVATE_KEY_FILE')
-UPLOAD_FOLDER = config('UPLOAD_FOLDER')
-ALLOWED_EXTENSIONS = config('ALLOWED_EXTENSIONS')
 # Limit the maximum allowed payload to 3 megabytes
 MAX_CONTENT_LENGTH = 3*1024*1024 
-MAX_CONTENT_LENGTH = config('MAX_CONTENT_LENGTH')
-# Set of allowed file extensions
-ALLOWED_EXTENSIONS = {'txt', 'doc', 'docx'}
-config['ALLOWED_EXTENSIONS'] = ALLOWED_EXTENSIONS
 
 
 # Function to attach account in ETHEREUM_HOME
@@ -41,31 +35,40 @@ def importPrivateKey(private_key):
     return status.returncode, status.stdout
 
 
+# Function that check if an extension is valid and that uploads the file 
+def allowed_file(filename):
+    # Set of allowed file extensions
+    ALLOWED_EXTENSIONS = {'txt', 'doc', 'docx'}
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+
 # Function to upload privateKey file in ETHEREUM_HOME
 def uploadPrivateKey(privatekey_file): 
-    # Keyphrase file
-    KEY_BASE = config('KEYSTORE_BASE')
-    pfile = open(KEY_BASE+'/temp/passwdkey', 'w')
+    UPLOAD_FOLDER = config('UPLOAD_FOLDER')
+    # Keyphrase file    
+    pfile = open(UPLOAD_FOLDER+'passwdkey', 'w')
     pfile.write(P_KEY)
     pfile.close()    
 
     # Uploaded PrivateKey file
     filename = secure_filename(privatekey_file.filename)
     if filename != '':
+        # UPLOAD_EXTENSIONS = {'txt', 'doc', 'docx'}
         # file_ext = os.path.splitext(filename)[1]
-        # if file_ext not in app.config['UPLOAD_EXTENSIONS']:
+        # if file_ext not in UPLOAD_EXTENSIONS:
         #     abort(400)
-        KEY_BASE = config('KEYSTORE_BASE')
-        privatekey_file.save(os.path.join(KEY_BASE+'/temp/', filename))
+        UPLOAD_FOLDER = config('UPLOAD_FOLDER')        
+        privatekey_file.save(os.path.join(UPLOAD_FOLDER, filename))
     
         # Read PrivateKey file
-        ufile = open(KEY_BASE+'/temp/'+filename, 'r')    
+        ufile = open(UPLOAD_FOLDER+filename, 'r')    
         ufile.close()                              
         # Run External Shell Programs for geth command
         status = subprocess.run(['geth', 'account', 'import', '--datadir', KEY_BASE, '--password', pfile.name, ufile.name], text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE) 
 
         # Delete all Key files        
-        files = glob.glob(KEY_BASE+'/temp/*')
+        files = glob.glob(UPLOAD_FOLDER+'*')
         for f in files:
             os.remove(f)
 
@@ -74,4 +77,4 @@ def uploadPrivateKey(privatekey_file):
 
 # https://flask.palletsprojects.com/en/1.1.x/patterns/fileuploads/
 # https://www.programcreek.com/python/example/96284/werkzeug.utils.secure_filename
-
+# UPLOAD_FOLDER = /home/syoo/.ethereum/temp/
