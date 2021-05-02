@@ -70,5 +70,3 @@ def uploadPrivateKey(privatekey_file):
             os.remove(f)
 
         return status.returncode, status.stdout
-
-# https://blog.miguelgrinberg.com/post/handling-file-uploads-with-flask/page/3
