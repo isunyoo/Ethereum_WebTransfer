@@ -3,15 +3,11 @@ import json, subprocess, os, glob
 from decouple import config
 from sys import stderr, stdout
 from werkzeug.utils import secure_filename
-from flask import abort
 
 # Global variables
 P_KEY = config('KEY')
 KEY_BASE = config('KEYSTORE_BASE')
 PRIVATE_KEY = config('PRIVATE_KEY_FILE')
-# Limit the maximum allowed payload to 3 megabytes
-MAX_CONTENT_LENGTH = 3*1024*1024 
-
 
 # Function to attach account in ETHEREUM_HOME
 def importPrivateKey(private_key): 
@@ -46,20 +42,21 @@ def allowed_file(filename):
 # Function to upload privateKey file in ETHEREUM_HOME
 def uploadPrivateKey(privatekey_file): 
     UPLOAD_FOLDER = config('UPLOAD_FOLDER')
-    # Keyphrase file    
-    pfile = open(UPLOAD_FOLDER+'passwdkey', 'w')
-    pfile.write(P_KEY)
-    pfile.close()    
-
+    
     # Uploaded PrivateKey file
     filename = secure_filename(privatekey_file.filename)
     if filename != '':
-        # UPLOAD_EXTENSIONS = {'txt', 'doc', 'docx'}
-        # file_ext = os.path.splitext(filename)[1]
-        # if file_ext not in UPLOAD_EXTENSIONS:
-        #     abort(400)
+        UPLOAD_EXTENSIONS = {'.txt', '.doc', '.docx', ''}        
+        file_ext = os.path.splitext(filename)[1]
+        if file_ext not in UPLOAD_EXTENSIONS:
+            return 1, "Upload file must be word(txt, doc) format."
         UPLOAD_FOLDER = config('UPLOAD_FOLDER')        
         privatekey_file.save(os.path.join(UPLOAD_FOLDER, filename))
+
+        # Keyphrase file creation
+        pfile = open(UPLOAD_FOLDER+'passwdkey', 'w')
+        pfile.write(P_KEY)
+        pfile.close()
     
         # Read PrivateKey file
         ufile = open(UPLOAD_FOLDER+filename, 'r')    
@@ -74,7 +71,4 @@ def uploadPrivateKey(privatekey_file):
 
         return status.returncode, status.stdout
 
-
-# https://flask.palletsprojects.com/en/1.1.x/patterns/fileuploads/
-# https://www.programcreek.com/python/example/96284/werkzeug.utils.secure_filename
-# UPLOAD_FOLDER = /home/syoo/.ethereum/temp/
+# https://blog.miguelgrinberg.com/post/handling-file-uploads-with-flask/page/3

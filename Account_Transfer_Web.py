@@ -232,6 +232,9 @@ def txResultHistoryData(query_file, start_block, end_block, principal_address):
 app = Flask(__name__)
 app.config['FLASK_ENV'] = 'development'
 app.config['SECRET_KEY'] = '12345'
+# Limiting the size of uploading file to 2 megabytes
+app.config['MAX_CONTENT_LENGTH'] = 2*1024*1024
+
 
 @app.route('/', methods=['GET', 'POST'])
 def index():    
