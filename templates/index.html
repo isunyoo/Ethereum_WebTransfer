@@ -82,11 +82,11 @@
     </form>
     <h1>3.Import Ethereum</h1>
     <form name="importForm" action="/importPrivateKey" method="post" onsubmit="return checkImport()">
-        <textarea name="inputPrivateKey" id="inputPrivateKey" placeholder="Type/Paste Your Private Key Here &#10;e.g. d6f830894638d5ced80b5bf0e370af1cd7648844b192e04d76804257371cfa78" class="form-control" style="width: 30%;">{{ request.form['inputEtherValue'] }}</textarea>
+        <textarea name="inputPrivateKey" id="inputPrivateKey" placeholder="Type/Paste Your Private Key Here. &#10;e.g. d6f830894638d5ced80b5bf0e370af1cd7648844b192e04d76804257371cfa78" class="form-control" style="width: 30%;">{{ request.form['inputEtherValue'] }}</textarea>
         <p><input type=submit value=Import>&nbsp&nbsp&nbsp</p>
     </form>
     <form name="uploadForm" action="/uploaderPrivateKey" method="POST" enctype="multipart/form-data" onsubmit="return checkUploader()">
-        <label for="myKeyFile">Select a privatekey file to import: (accept .txt,.doc,.docx)<input type="file" id="myKeyFile" name="myKeyFile" accept=".txt,.doc,.docx"><input type="submit" value="Upload and Import"></label>
+        <label for="myKeyFile">Select a privatekey file to import: (accept .txt, .doc, .docx)<input type="file" id="myKeyFile" name="myKeyFile" accept=".txt,.doc,.docx"><input type="submit" value="Upload and Import"></label>
     </form>
     {% for message in get_flashed_messages(category_filter=['importResult']) %}
     <p>{{ message }}</p> {% endfor %}
