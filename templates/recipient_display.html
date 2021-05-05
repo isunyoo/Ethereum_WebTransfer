@@ -5,8 +5,8 @@
     <meta charset="UTF-8">
     <title>Ethereum Transfer Web</title>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>	
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 </head>
 
 <body>
@@ -18,9 +18,30 @@
                 return false;
             }
         }
+
+        // Copying the text on the serverside clipboard
+        function clip_text(a_string) {
+            var input = document.createElement('input')
+            input.id = "__copyText__";
+            input.value = a_string;
+            document.body.appendChild(input);
+            input.select();
+            document.execCommand("copy");
+            var txt = input.value
+            input.remove()
+            console.log("OK COPIED: '" + txt + "'")
+            alert("Public address '" + txt + "' copied to clipboard!");
+        }
+
+        function clip_div(divId) {
+            return clip_text(document.getElementById(divId).innerText)
+        }
     </script>
     <h3>Welcome to Ether Transfer Recipient Web</h3>
-    <h1>Selected Principle Account Address: <img src="{{url_for('static', filename='images/'+value0+'.png')}}" align="middle" /> {{ value0 }} <img src="{{url_for('static', filename='images/'+value0+'_qrcode.png')}}" align="middle" /></h1>
+    <h1>Selected Principle Account Address: <img src="{{url_for('static', filename='images/'+value0+'.png')}}" align="middle" />
+        <div id="prinCopyme"><a href="#" onClick="clip_div('prinCopyme')">{{ value0 }}</a></div>
+        <img src="{{url_for('static', filename='images/'+value0+'_qrcode.png')}}" align="middle" />
+    </h1>
     <h1>Please select your recipient address[#]</h1>
     <form name="selectForm" action="/sendEther" method="post" onsubmit="return checkSelect()">
         {% for i in range(value2): %}
@@ -29,7 +50,7 @@
         </p>
         {% endfor %}
         <p><input type=submit value=Select></p>
-    </form>    
+    </form>
     <br>
     <a href="{{ url_for('index') }}">Go back to Main</a>
 </body>
