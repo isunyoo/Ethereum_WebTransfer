@@ -54,14 +54,20 @@
 
 <body>
     <h3>Welcome to Ether Transfer Recipient Web</h3>
-    <h1>Selected Principle Account Address: <img src="{{url_for('static', filename='images/'+value0+'.png')}}" align="middle" />
-        <div id="prinCopyme"><a href="#" onClick="clip_div('prinCopyme')">{{ value0 }}</a></div>
-        <img src="{{url_for('static', filename='images/'+value0+'_qrcode.png')}}" align="middle" />
-    </h1>
-    <h1>Selected Recipient Account Address: <img src="{{url_for('static', filename='images/'+value1+'.png')}}" align="middle" />
-        <div id="reciCopyme"><a href="#" onClick="clip_div('reciCopyme')">{{ value1 }}</a></div>
-        <img src="{{url_for('static', filename='images/'+value1+'_qrcode.png')}}" align="middle" />
-    </h1>
+    <h2>Selected Principle Account Address:
+        <div id="prinCopyme">
+            <img src="{{url_for('static', filename='images/'+value0+'.png')}}" align="middle" />
+            <a href="#" onClick="clip_div('prinCopyme')">{{ value0 }}</a>
+            <img src="{{url_for('static', filename='images/'+value0+'_qrcode.png')}}" align="middle" />
+        </div>
+    </h2>
+    <h2>Selected Recipient Account Address:
+        <div id="reciCopyme">
+            <img src="{{url_for('static', filename='images/'+value1+'.png')}}" align="middle" />
+            <a href="#" onClick="clip_div('reciCopyme')">{{ value1 }}</a>
+            <img src="{{url_for('static', filename='images/'+value1+'_qrcode.png')}}" align="middle" />
+        </div>
+    </h2>
     <form name="etherInputForm" action="/transferEther" onsubmit="return checkInput()" method="post">
         <div id="convert_usd_currency" class="form-group">
             <label for="inputValue"><h2>Enter your amounts of ethererum(ETH) to send: </h2></label>

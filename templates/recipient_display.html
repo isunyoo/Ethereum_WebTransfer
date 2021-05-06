@@ -38,10 +38,13 @@
         }
     </script>
     <h3>Welcome to Ether Transfer Recipient Web</h3>
-    <h1>Selected Principle Account Address: <img src="{{url_for('static', filename='images/'+value0+'.png')}}" align="middle" />
-        <div id="prinCopyme"><a href="#" onClick="clip_div('prinCopyme')">{{ value0 }}</a></div>
-        <img src="{{url_for('static', filename='images/'+value0+'_qrcode.png')}}" align="middle" />
-    </h1>
+    <h2>Selected Principle Account Address:
+        <div id="prinCopyme">
+            <img src="{{url_for('static', filename='images/'+value0+'.png')}}" align="middle" />
+            <a href="#" onClick="clip_div('prinCopyme')">{{ value0 }}</a>
+            <img src="{{url_for('static', filename='images/'+value0+'_qrcode.png')}}" align="middle" />
+        </div>
+    </h2>
     <h1>Please select your recipient address[#]</h1>
     <form name="selectForm" action="/sendEther" method="post" onsubmit="return checkSelect()">
         {% for i in range(value2): %}

@@ -7,39 +7,64 @@
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript">
+        // Copying the text on the serverside clipboard
+        function clip_text(a_string) {
+            var input = document.createElement('input')
+            input.id = "__copyText__";
+            input.value = a_string;
+            document.body.appendChild(input);
+            input.select();
+            document.execCommand("copy");
+            var txt = input.value
+            input.remove()
+            console.log("OK COPIED: '" + txt + "'")
+            alert("Public address '" + txt + "' copied to clipboard!");
+        }
+
+        function clip_div(divId) {
+            return clip_text(document.getElementById(divId).innerText)
+        }
+    </script>
 </head>
 
 <body>
     <h3>Welcome to Ether Transaction History</h3>
-    <h1>Selected Principle Account Address: <img src="{{url_for('static', filename='images/'+value0+'.png')}}" align="middle" /> {{ value0 }} <img src="{{url_for('static', filename='images/'+value0+'_qrcode.png')}}" align="middle" /></h1>
+    <h2>Selected Principle Account Address:
+        <div id="prinCopyme">
+            <img src="{{url_for('static', filename='images/'+value0+'.png')}}" align="middle" />
+            <a href="#" onClick="clip_div('prinCopyme')">{{ value0 }}</a>
+            <img src="{{url_for('static', filename='images/'+value0+'_qrcode.png')}}" align="middle" />
+        </div>
+    </h2>
     <h2>Transanction History of 'From' {{ value1 }} Blk# ~ 'To' {{ value2-1 }} Blk#</h2>
     <table style="width: 100%;" border="2" cellpadding="5">
         <tbody>
-        <tr style="font-weight:bold">            
-        <td>From</td>
-        <td>To</td>
-        <td>Ethereum(ETH)</td>
-        <td>USD($)</td>
-        <td>Nonce</td>
-        <td>BlockNumber</td>                
-        <td>TransactionHash</td>
-        <!-- <td>BlockHash</td>         -->
-        </tr>    
-        {% for i in range(value3): %}
-        <tr>            
-            <td>{{ value4[i] }}</td>
-            <td>{{ value5[i] }}</td>
-            <td>{{ value6[i] }}</td>
-            <td>{{ value7[i] }}</td>
-            <td>{{ value8[i] }}</td>
-            <td>{{ value9[i] }}</td>
-            <td>{{ value10[i] }}</td>
-            <!-- <td>{{ value11[i] }}</td> -->
-        </tr>
-        {% endfor %}    
+            <tr style="font-weight:bold">
+                <td>From</td>
+                <td>To</td>
+                <td>Ethereum(ETH)</td>
+                <td>USD($)</td>
+                <td>Nonce</td>
+                <td>BlockNumber</td>
+                <td>TransactionHash</td>
+                <!-- <td>BlockHash</td>         -->
+            </tr>
+            {% for i in range(value3): %}
+            <tr>
+                <td>{{ value4[i] }}</td>
+                <td>{{ value5[i] }}</td>
+                <td>{{ value6[i] }}</td>
+                <td>{{ value7[i] }}</td>
+                <td>{{ value8[i] }}</td>
+                <td>{{ value9[i] }}</td>
+                <td>{{ value10[i] }}</td>
+                <!-- <td>{{ value11[i] }}</td> -->
+            </tr>
+            {% endfor %}
         </tbody>
-        </table>
-        <br>
+    </table>
+    <br>
     <a href="{{ url_for('index') }}">Go back to Main</a>
 </body>
 
