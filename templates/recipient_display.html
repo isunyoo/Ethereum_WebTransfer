@@ -36,6 +36,10 @@
         function clip_div(divId) {
             return clip_text(document.getElementById(divId).innerText)
         }
+
+        function export_privateKey(account_name) {
+            alert("Public address '" + account_name + "' Show Private Keys\nThis is your private key\nWarning: Never disclose this key. Anyone with your private keys can steal any assets held in your account.");
+        }
     </script>
     <h3>Welcome to Ether Transfer Recipient Web</h3>
     <h2>Selected Principle Account Address:
@@ -43,6 +47,7 @@
             <img src="{{url_for('static', filename='images/'+value0+'.png')}}" align="middle" />
             <a href="#" onClick="clip_div('prinCopyme')">{{ value0 }}</a>
             <img src="{{url_for('static', filename='images/'+value0+'_qrcode.png')}}" align="middle" />
+            <input type=submit value="Export Private Key" onClick="export_privateKey('{{ value0 }}')">
         </div>
     </h2>
     <h1>Please select your recipient address[#]</h1>
