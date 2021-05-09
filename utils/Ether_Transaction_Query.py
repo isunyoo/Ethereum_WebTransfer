@@ -5,7 +5,7 @@ from decouple import config
 from hexbytes import HexBytes
 
 # Global variables
-NETWORK_HOME = config('NETWORK_NAME')
+NETWORK_HOME = config('NETWORK_NAME_DEV')
 
 # Connection Verification
 web3 = Web3(Web3.HTTPProvider(NETWORK_HOME))

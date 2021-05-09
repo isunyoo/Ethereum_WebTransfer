@@ -1,8 +1,3 @@
-#### Mnemonic key > private key #2
-# from Mnemonic_util import mnemonic_to_private_key 
-# private_key = mnemonic_to_private_key("Ethereum mnemonic keys") 
-# print("Your private key is: {}".format(str(binascii.hexlify(private_key), 'utf-8')))
-
 import binascii
 import hashlib
 import hmac

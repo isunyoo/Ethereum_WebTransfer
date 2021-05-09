@@ -2,13 +2,14 @@ from web3 import Web3
 from web3.auto import w3
 from decouple import config
 import utils.Import_PrivateKey as imPri
+import utils.Mnemonic_util as imMnemonic
 import utils.Pydenticon_Generator as pyIcon
 import utils.Ether_Transaction_Query as etherQuery
 import json, binascii, requests, glob, qrcode, time
 from flask import Flask, render_template, request, redirect, url_for, flash, Markup, Response, jsonify
 
 # Global variables
-NETWORK_HOME = config('NETWORK_NAME')
+NETWORK_HOME = config('NETWORK_NAME_DEV')
 KFILE_HOME = config('KEYFILE_HOME')
 ACCOUNT_FILE = config('KEY_FILE')
 ACCOUNT_KEY = config('KEY')
@@ -270,6 +271,16 @@ def queryPrincipalInput():
 @app.route('/importPrivateKey', methods=['POST'])
 def importPrivateKeyInput():    
     privateKeyValue = request.form['inputPrivateKey']        
+    returncode, stdout = imPri.importPrivateKey(privateKeyValue) 
+    importResultData(returncode, stdout)
+    return redirect(url_for('index'))
+
+@app.route('/importSeedPhrase', methods=['POST'])
+def importSeedPhraseInput():    
+    seedPhraseValue = request.form['inputSeedPhrase']                
+    biPrivateKey = imMnemonic.mnemonic_to_private_key(seedPhraseValue)    
+    # print("Your private key is: {}".format(str(binascii.hexlify(biPrivateKey), 'utf-8')))
+    privateKeyValue = format(str(binascii.hexlify(biPrivateKey), 'utf-8'))    
     returncode, stdout = imPri.importPrivateKey(privateKeyValue) 
     importResultData(returncode, stdout)
     return redirect(url_for('index'))

@@ -4,7 +4,7 @@ from web3.auto import w3
 from decouple import config
 
 # Global variables
-NETWORK_HOME = config('NETWORK_NAME')
+NETWORK_HOME = config('NETWORK_NAME_DEV')
 KFILE_HOME = config('KEYFILE_HOME')
 ACCOUNT_FILE = config('KEY_FILE')
 ACCOUNT_KEY = config('KEY')

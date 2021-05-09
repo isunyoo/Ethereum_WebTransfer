@@ -41,10 +41,18 @@
             }
         }
 
-        function checkImport() {
-            var selectx = document.forms["importForm"]["inputPrivateKey"].value;
+        function checkPKImport() {
+            var selectx = document.forms["importPKForm"]["inputPrivateKey"].value;
             if (selectx == "") {
                 alert("Please Paste/Type Your Private Key");
+                return false;
+            }
+        }
+
+        function checkSeedImport() {
+            var selectx = document.forms["importSeedForm"]["inputSeedPhrase"].value;
+            if (selectx == "") {
+                alert("Please Paste/Type Your Private Seed Phrase");
                 return false;
             }
         }
@@ -81,15 +89,26 @@
         <p><input type=submit value=Query></p>
     </form>
     <h1>3.Import Account</h1>
-    <form name="importForm" action="/importPrivateKey" method="post" onsubmit="return checkImport()">
-        <textarea name="inputPrivateKey" id="inputPrivateKey" placeholder="Type/Paste Your Private Key Here. &#10;e.g. d6f830894638d5ced80b5bf0e370af1cd7648844b192e04d76804257371cfa78" class="form-control" style="width: 30%;">{{ request.form['inputEtherValue'] }}</textarea>
-        <p><input type=submit value=Import>&nbsp&nbsp&nbsp</p>
-        <textarea name="inputPrivateKey" id="inputPrivateKey" placeholder="Type/Paste Your private seed phrase Here. &#10;e.g. dove lumber quote board young robust kit invite plastic regular skull history &#10;DO NOT share this phrase with anyone! &#10;These words can be used to steal all your accounts."
-            class="form-control" style="width: 30%;">{{ request.form['inputEtherValue'] }}</textarea>
-        <p><input type=submit value=Import>&nbsp&nbsp&nbsp</p>
-    </form>
+    <table style="width: 70%; height: auto;" border="1" cellpadding="5">
+        <tbody>
+            <td>
+                <form name="importPKForm" action="/importPrivateKey" method="post" onsubmit="return checkPKImport()">
+                    <textarea name="inputPrivateKey" id="inputPrivateKey" placeholder="Type/Paste Your Private Key Here. &#10;e.g. d6f830894638d5ced80b5bf0e370af1cd7648844b192e04d76804257371cfa78" class="form-control" style="width: 90%;">{{ request.form['inputEtherValue'] }}</textarea>
+                    <p><input type=submit value=Import>&nbsp&nbsp&nbsp</p>
+                </form>
+            </td>
+            <td>
+                <form name="importSeedForm" action="/importSeedPhrase" method="post" onsubmit="return checkSeedImport()">
+                    <textarea name="inputSeedPhrase" id="inputSeedPhrase" placeholder="Type/Paste Your private seed phrase Here. &#10;e.g. dove lumber quote board young robust kit invite plastic regular skull history &#10;DO NOT share this phrase with anyone! &#10;These words can be used to steal all your accounts."
+                        class="form-control" style="width: 90%; height: 100px;">{{ request.form['inputEtherValue'] }}</textarea>
+                    <p><input type=submit value=Import>&nbsp&nbsp&nbsp</p>
+                </form>
+            </td>
+        </tbody>
+    </table>
+    <br>
     <form name="uploadForm" action="/uploaderPrivateKey" method="POST" enctype="multipart/form-data" onsubmit="return checkUploader()">
-        <label for="myKeyFile">Select a privatekey file to import: (accept .txt, .doc, .docx)<input type="file" id="myKeyFile" name="myKeyFile" accept=".txt,.doc,.docx"><input type="submit" value="Upload and Import"></label>
+        <label for="myKeyFile">Select a privatekey file to import (accept: .txt, .doc, .docx)<input type="file" id="myKeyFile" name="myKeyFile" accept=".txt,.doc,.docx"><input type="submit" value="Upload and Import"></label>
     </form>
     {% for message in get_flashed_messages(category_filter=['importResult']) %}
     <p>{{ message }}</p> {% endfor %}
