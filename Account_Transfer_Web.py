@@ -9,7 +9,7 @@ import json, binascii, requests, glob, qrcode, time
 from flask import Flask, render_template, request, redirect, url_for, flash, Markup, Response, jsonify
 
 # Global variables
-NETWORK_HOME = config('NETWORK_NAME_DEV')
+NETWORK_HOME = config('NETWORK_NAME_DEV') # Line 35 enabe back
 KFILE_HOME = config('KEYFILE_HOME')
 ACCOUNT_FILE = config('KEY_FILE')
 ACCOUNT_KEY = config('KEY')
@@ -33,8 +33,9 @@ web3 = Web3(Web3.HTTPProvider(NETWORK_HOME))
 
 
 # Get the current USD price of cryptocurrency conversion from API URL
-apiReq = requests.get(API_URL)
-USD_CURRENT_PRICE=json.loads(apiReq.content)["USD"]    
+# apiReq = requests.get(API_URL)
+# USD_CURRENT_PRICE=json.loads(apiReq.content)["USD"] 
+USD_CURRENT_PRICE=3500
 
 
 # Function to return balances of ethereum
@@ -252,11 +253,12 @@ def index():
 def selectPrincipalInput():
     global _global_principal_address    
     _global_principal_address = request.form['principle']
-    # print(extractPrincipalCipher(principalAddress))    
+    _principal_address_privateKey = extractPrincipalCipher(_global_principal_address)
+    # print(extractPrincipalCipher(_global_principal_address))
     accountImageCreation(_global_principal_address)
     recipientLists = listAccounts()    
     dataLen = len(recipientLists[0])                    
-    return render_template('recipient_display.html', value0=_global_principal_address, value1=recipientLists, value2=dataLen)
+    return render_template('recipient_display.html', value0=_global_principal_address, value1=recipientLists, value2=dataLen, value3=_principal_address_privateKey)
 
 @app.route('/queryPrincipalData', methods=['POST'])
 def queryPrincipalInput():
