@@ -328,8 +328,12 @@ def progress():
             x = x + 10
             time.sleep(0.8)
             yield "data:" + str(x) + "\n\n"
-    return Response(generate(), mimetype= 'text/event-stream')    
-    
+    return Response(generate(), mimetype= 'text/event-stream')   
+
+@app.route('/verifyKeyPhrase')
+def verifyKeyPhrase():
+    return render_template('input_keyphrase.html')
+        
 
 # Development Debug Environment
 if __name__ == '__main__':

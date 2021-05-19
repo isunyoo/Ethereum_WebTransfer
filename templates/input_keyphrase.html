@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<body>
+<p>Show Private Keys</p>
+Type your KeyPhrase password: <input type="password" value="" id="myInput"><br><br>
+<input type="checkbox" onclick="myFunction()">Show Password
+<script>
+function myFunction() {
+  var x = document.getElementById("myInput");
+  if (x.type === "password") {
+    x.type = "text";
+  } else {
+    x.type = "password";
+  }
+}
+function export_privateKey(account_name, account_key) {
+            alert("Public address: " + account_name + "\nPrivate Key:\n" + account_key);                        
+        }
+</script>
+<p>Warning: Never disclose this key. Anyone with your private keys can steal any assets held in your account.</p>
+<!-- <input type=submit value=Submit> -->
+<input type=submit value="Export Private Key" onClick="export_privateKey('{{ value0 }}', '{{ value3 }}')">
+</body>
+</html>

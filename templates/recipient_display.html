@@ -38,7 +38,12 @@
         }
 
         function export_privateKey(account_name, account_key) {
-            alert("Public address: " + account_name + "\nPrivate Key:\n" + account_key + "\nWarning: Never disclose this key. Anyone with your private keys can steal any assets held in your account.");
+            alert("Public address: " + account_name + "\nPrivate Key:\n" + account_key + "\nWarning: Never disclose this key. Anyone with your private keys can steal any assets held in your account.");                        
+        }
+
+        function openWin() {
+            // window.open(URL, name, specs, replace)
+            myWindow = window.open("/verifyKeyPhrase", "", "width=450, height=250");
         }
     </script>
     <h3>Welcome to Ether Transfer Recipient Web</h3>
@@ -47,7 +52,8 @@
             <img src="{{url_for('static', filename='images/'+value0+'.png')}}" align="middle" />
             <a href="#" onClick="clip_div('prinCopyme')">{{ value0 }}</a>
             <img src="{{url_for('static', filename='images/'+value0+'_qrcode.png')}}" align="middle" />
-            <input type=submit value="Export Private Key" onClick="export_privateKey('{{ value0 }}', '{{ value3 }}')">
+            <!-- <input type=submit value="Export Private Key" onClick="export_privateKey('{{ value0 }}', '{{ value3 }}')"> -->
+            <input type=submit value="Export Private Key" onClick="openWin()">
         </div>
     </h2>
     <h1>Please select your recipient address[#]</h1>
