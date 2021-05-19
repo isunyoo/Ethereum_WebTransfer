@@ -253,12 +253,10 @@ def index():
 def selectPrincipalInput():
     global _global_principal_address    
     _global_principal_address = request.form['principle']
-    _principal_address_privateKey = extractPrincipalCipher(_global_principal_address)
-    # print(extractPrincipalCipher(_global_principal_address))
     accountImageCreation(_global_principal_address)
     recipientLists = listAccounts()    
     dataLen = len(recipientLists[0])                    
-    return render_template('recipient_display.html', value0=_global_principal_address, value1=recipientLists, value2=dataLen, value3=_principal_address_privateKey)
+    return render_template('recipient_display.html', value0=_global_principal_address, value1=recipientLists, value2=dataLen)
 
 @app.route('/queryPrincipalData', methods=['POST'])
 def queryPrincipalInput():
@@ -332,7 +330,9 @@ def progress():
 
 @app.route('/verifyKeyPhrase')
 def verifyKeyPhrase():
-    return render_template('input_keyphrase.html')
+    _principal_address_privateKey = extractPrincipalCipher(_global_principal_address)
+    # print(extractPrincipalCipher(_global_principal_address))
+    return render_template('input_keyphrase.html', value0=_global_principal_address, value1=_principal_address_privateKey)
         
 
 # Development Debug Environment
