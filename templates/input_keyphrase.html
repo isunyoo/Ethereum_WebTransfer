@@ -1,14 +1,10 @@
 <!DOCTYPE html>
 <html>
-
 <body>
-    <p>Show Private Keys</p>
-    Type your KeyPhrase password: <input type="password" value="" id="myInput"><br><br>
-    <input type="checkbox" name="password" onclick="myFunction()">Show Password
     <script type="text/javascript">
-        function checkInput() {
-            var selectx = document.forms["privateKeyForm"]["password"].value;
-            if (isNaN(selectx) || selectx == "") {
+        function checkInputPwd() {
+            var keyPhrase = document.forms["privateKeyForm"]["keyPhrase"].value;
+            if (isNaN(keyPhrase) || keyPhrase == "") {
                 alert("Please type your keyphrase password");
                 return false;
             }
@@ -21,15 +17,15 @@
             } else {
                 x.type = "password";
             }
-        }
-
-        function export_privateKey(account_name, account_key) {
-            alert("Public address: " + account_name + "\nPrivate Key:\n" + account_key);
-        }
+        }        
     </script>
-    <p>Warning: Never disclose this key. Anyone with your private keys can steal any assets held in your account.</p>
-    <form name="privateKeyForm" action="/verifyKeyPhrase" method="post" onsubmit="return checkInput()">
-        <input type=submit value="Export Private Key" onClick="export_privateKey('{{ value0 }}', '{{ value1 }}')">
+    <form name="privateKeyForm" action="/verifyKeyPhrase" method="post" onsubmit="return checkInputPwd()">     
+        <p>Show Private Keys</p>         
+        Type your KeyPhrase password: <input type="password" name="keyPhrase" id="myInput"><br>
+        <input type="checkbox" onclick="myFunction()">Show Password        
+        <p>Warning: Never disclose this key. Anyone with your private keys can steal any assets held in your account.</p>
+        <!-- <input type=submit value="Export Private Key" onClick="export_privateKey('{{ value0 }}', '{{ value1 }}')">             -->
+        <input type=submit value="Export Private Key">            
     </form>
 
 </body>

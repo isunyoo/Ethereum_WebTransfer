@@ -328,11 +328,17 @@ def progress():
             yield "data:" + str(x) + "\n\n"
     return Response(generate(), mimetype= 'text/event-stream')   
 
+@app.route('/inputKeyPhrase')
+def inputKeyPhrase():    
+    return render_template('input_keyphrase.html')
+
 @app.route('/verifyKeyPhrase')
 def verifyKeyPhrase():
+    _keyphrase = request.form['keyPhrase']  
+    print(_keyphrase)
     _principal_address_privateKey = extractPrincipalCipher(_global_principal_address)
-    # print(extractPrincipalCipher(_global_principal_address))
-    return render_template('input_keyphrase.html', value0=_global_principal_address, value1=_principal_address_privateKey)
+    print(extractPrincipalCipher(_global_principal_address))
+    return render_template('output_keyphrase.html', value0=_global_principal_address, value1=_principal_address_privateKey)
         
 
 # Development Debug Environment
