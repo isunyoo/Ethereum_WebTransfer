@@ -336,8 +336,9 @@ def inputKeyPhrase():
 def verifyKeyPhrase():
     _keyphrase = request.form['keyPhrase']  
     print(_keyphrase)
-    _principal_address_privateKey = extractPrincipalCipher(_global_principal_address)
-    print(extractPrincipalCipher(_global_principal_address))
+    if(_keyphrase == ACCOUNT_KEY):
+        _principal_address_privateKey = extractPrincipalCipher(_global_principal_address)
+        print(extractPrincipalCipher(_global_principal_address))
     return render_template('output_keyphrase.html', value0=_global_principal_address, value1=_principal_address_privateKey)
         
 
