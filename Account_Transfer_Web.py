@@ -330,11 +330,11 @@ def progress():
 
 @app.route('/inputKeyPhrase')
 def inputKeyPhrase():    
-    return render_template('input_keyphrase.html')
+    return render_template('input_keyphrase.html', value0=_global_principal_address)
 
 @app.route('/verifyKeyPhrase')
 def verifyKeyPhrase():
-    _keyphrase = request.form['keyPhrase']  
+    _keyphrase = request.form['passPhrase']  
     print(_keyphrase)
     if(_keyphrase == ACCOUNT_KEY):
         _principal_address_privateKey = extractPrincipalCipher(_global_principal_address)
