@@ -39,7 +39,11 @@
 
         function openWin() {
             // window.open(URL, name, specs, replace)
-            myWindow = window.open("/inputKeyPhrase", "", "width=450, height=250");
+            myWindow = window.open("/inputKeyPhrase", "keyphrase_popup", "width=450, height=250");
+        }
+
+        function closeWin() {
+            myWindow.close();   // Closes the new window
         }
     </script>
     <h3>Welcome to Ether Transfer Recipient Web</h3>
