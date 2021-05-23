@@ -7,8 +7,6 @@
             if (keyPhrase == "") {
                 alert("Please type your keyphrase password");
                 return false;
-            } else {
-                window.open('/verifyKeyPhrase','privatekey_popup','width=450, height=250');
             }            
         }
 
@@ -20,23 +18,16 @@
                 x.type = "password";
             }
         }   
-        
-        function closeWin() {
-            myWindow.close();   // Closes the new window
-        }
     </script>
-    <!-- <form name="privateKeyForm" action="/verifyKeyPhrase" method="post" onsubmit="return checkInputPwd()">      -->
-    <form name="privateKeyForm" method="post" onsubmit="return checkInputPwd()">  
+    <form name="privateKeyForm" action="/verifyKeyPhrase" method="post" onsubmit="return checkInputPwd()">         
         <p>Show private key for "{{ value0 }}"</p>         
         Type your KeyPhrase password: <input type="password" name="passPhrase" id="myInput"><br>
         <input type="checkbox" onclick="myFunction()">Show Password        
-        <p>Warning: Never disclose this key. Anyone with your private keys can steal any assets held in your account.</p>
-        <!-- <input type=submit value="Export Private Key" onClick="export_privateKey('{{ value0 }}', '{{ value1 }}')">             -->
-        <input type=submit value="Show private key" onClick="closeWin()">            
+        <p>Warning: Never disclose this key. Anyone with your private keys can steal any assets held in your account.</p>        
+        <input type=submit value="Show private key">            
     </form>
 </body>
 </html>
 
 
-<!-- <form method="post" target="print_popup" action="/myFormProcessorInNewWindow.aspx" onsubmit="window.open('/verifyKeyPhrase','privatekey_popup','width=450, height=250');" -->
 

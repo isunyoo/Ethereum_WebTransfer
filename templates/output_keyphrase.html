@@ -18,6 +18,7 @@
             input.remove()
             console.log("OK COPIED: '" + txt + "'")
             alert("Private Key '" + txt + "' copied to clipboard!");
+            window.close();
         }
 
         function clip_div(divId) {
@@ -30,7 +31,7 @@
     <p>Private Key: 
         <div id="prinCopyme">
             <a href="#" onClick="clip_div('prinCopyme')">{{ value1 }}</a>            
-        </div>  
+        </div>          
     </p>
     <p>Warning: Never disclose this key. Anyone with your private key can fully control your account, including transferring away any of your funds.</p>
     {% else: %}        
